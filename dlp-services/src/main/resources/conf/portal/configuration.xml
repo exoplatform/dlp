@@ -15,7 +15,89 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 -->
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd http://www.exoplatform.org/xml/ns/kernel_1_2.xsd" xmlns="http://www.exoplatform.org/xml/ns/kernel_1_2.xsd">
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd http://www.exoplatform.org/xml/ns/kernel_1_3.xsd"
+               xmlns="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd">
 
+  <component>
+    <type>org.exoplatform.dlp.rest.DlpItemRestServices</type>
+  </component>
 
+  <component>
+    <type>org.exoplatform.dlp.rest.DlpRestServices</type>
+  </component>
+  
+  <component>
+    <key>org.exoplatform.dlp.queue.QueueDlpService</key>
+    <type>org.exoplatform.dlp.queue.impl.QueueDlpServiceImpl</type>
+  </component>
+  
+  <component>
+    <key>org.exoplatform.dlp.dao.DlpOperationDAO</key>
+    <type>org.exoplatform.dlp.dao.DlpOperationDAOImpl</type>
+  </component>
+  
+  <component>
+    <key>org.exoplatform.dlp.processor.DlpOperationProcessor</key>
+    <type>org.exoplatform.dlp.processor.impl.DlpOperationProcessorImpl</type>
+  </component>
+
+  <component>
+    <key>org.exoplatform.dlp.service.DlpPositiveItemService</key>
+    <type>org.exoplatform.dlp.service.DlpPositiveItemServiceImpl</type>
+  </component>
+
+  <component>
+    <key>org.exoplatform.dlp.service.RestoredDlpItemService</key>
+    <type>org.exoplatform.dlp.service.RestoredDlpItemServiceImpl</type>
+  </component>
+
+  <component>
+    <key>org.exoplatform.dlp.dao.DlpPositiveItemDAO</key>
+    <type>org.exoplatform.dlp.dao.DlpPositiveItemDAOImpl</type>
+  </component>
+
+  <component>
+    <key>org.exoplatform.dlp.dao.RestoredDlpItemDAO</key>
+    <type>org.exoplatform.dlp.dao.RestoredDlpItemDAOImpl</type>
+  </component>
+  
+  <external-component-plugins>
+    <target-component>org.exoplatform.services.scheduler.JobSchedulerService</target-component>
+    <component-plugin>
+      <name>DlpJob</name>
+      <set-method>addPeriodJob</set-method>
+      <type>org.exoplatform.services.scheduler.PeriodJob</type>
+      <description>Init dlp job</description>
+      <init-params>
+        <properties-param>
+          <name>job.info</name>
+          <description>details of the execution of the dlp job</description>
+          <property name="jobName" value="Dlp"/>
+          <property name="groupName" value="Dlp"/>
+          <property name="job" value="org.exoplatform.dlp.job.DlpJob"/>
+          <property name="repeatCount" value="0"/>
+          <property name="period" value="${exo.dlp.job.period:60000}"/><!-- default 1 minute -->
+          <property name="startTime" value="+60000"/><!-- start after 1 minute delay -->
+          <property name="endTime" value=""/>
+        </properties-param>
+      </init-params>
+    </component-plugin>
+  </external-component-plugins>
+  
+  <external-component-plugins>
+    <target-component>org.exoplatform.commons.api.persistence.DataInitializer</target-component>
+    <component-plugin>
+      <name>DlpRDBMSChangeLogsPlugin</name>
+      <set-method>addChangeLogsPlugin</set-method>
+      <type>org.exoplatform.commons.persistence.impl.ChangeLogsPlugin</type>
+      <init-params>
+        <values-param>
+        <name>changelogs</name>
+          <description>Change logs of Dlp RDBMS</description>
+          <value>db/changelog/dlp-rdbms.db.changelog-master.xml</value>
+        </values-param>
+      </init-params>
+    </component-plugin>
+  </external-component-plugins>
 </configuration>

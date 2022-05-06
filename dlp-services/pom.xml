@@ -8,9 +8,14 @@
   <artifactId>dlp-services</artifactId>
   <name>eXo Data Leak Prevention - Services</name>
   <properties>
-    <exo.test.coverage.ratio>0</exo.test.coverage.ratio>
+    <exo.test.coverage.ratio>0.5</exo.test.coverage.ratio>
   </properties>
   <dependencies>
+    <dependency>
+      <groupId>org.exoplatform.commons</groupId>
+      <artifactId>commons-component-common</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>dlp-api</artifactId>
@@ -24,11 +29,6 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -49,5 +49,11 @@
   </dependencies>
   <build>
     <finalName>dlp-services</finalName>
+	<plugins>
+      <plugin>
+        <groupId>com.jcabi</groupId>
+        <artifactId>jcabi-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
   </build>
 </project>
