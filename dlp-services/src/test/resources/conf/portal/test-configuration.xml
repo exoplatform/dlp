@@ -8,6 +8,11 @@
     <key>org.exoplatform.dlp.dao.DlpOperationDAO</key>
     <type>org.exoplatform.dlp.dao.DlpOperationDAOImpl</type>
   </component>
+  
+  <component>
+    <key>org.exoplatform.dlp.processor.DlpOperationProcessor</key>
+    <type>org.exoplatform.dlp.processor.impl.DlpOperationProcessorImpl</type>
+  </component>
 
   <component>
     <key>org.exoplatform.services.organization.OrganizationService</key>

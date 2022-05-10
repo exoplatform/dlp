@@ -8,7 +8,7 @@
   <artifactId>dlp-services</artifactId>
   <name>eXo Data Leak Prevention - Services</name>
   <properties>
-    <exo.test.coverage.ratio>0.5</exo.test.coverage.ratio>
+    <exo.test.coverage.ratio>0.3</exo.test.coverage.ratio>
   </properties>
   <dependencies>
     <dependency>
