@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd http://www.exoplatform.org/xml/ns/kernel_1_3.xsd"
+  xmlns="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd">
+
+  <external-component-plugins>
+    <target-component>org.exoplatform.services.listener.ListenerService</target-component>
+    <component-plugin>
+      <name>dlp.listener.event.detect.item</name>
+      <set-method>addListener</set-method>
+      <type>org.exoplatform.dlp.activity.listener.DlpActivityAttachmentListener</type>
+      <description>Clear Activity cache when DLP processes activity attachments</description>
+    </component-plugin>
+    <component-plugin>
+      <name>dlp.listener.event.delete.item</name>
+      <set-method>addListener</set-method>
+      <type>org.exoplatform.dlp.activity.listener.DlpActivityAttachmentListener</type>
+      <description>Clear Activity cache when DLP processes activity attachments</description>
+    </component-plugin>
+    <component-plugin>
+      <name>dlp.listener.event.restore.item</name>
+      <set-method>addListener</set-method>
+      <type>org.exoplatform.dlp.activity.listener.DlpActivityAttachmentListener</type>
+      <description>Clear Activity cache when DLP processes activity attachments</description>
+    </component-plugin>
+  </external-component-plugins>
+
+</configuration>
