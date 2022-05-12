@@ -15,11 +15,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.dlp.dto.DlpPositiveItem;
 import org.exoplatform.dlp.processor.DlpOperationProcessor;
 import org.exoplatform.dlp.service.DlpPositiveItemService;
-import org.exoplatform.portal.config.UserACL;
+import org.exoplatform.dlp.utils.DlpUtils;
 import org.exoplatform.portal.rest.CollectionEntity;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -59,7 +58,7 @@ public class DlpItemRestServices implements ResourceContainer {
                                       @ApiParam(value = "Limit", required = false, defaultValue = "20")
                                       @QueryParam("limit")
                                       int limit) {
-    if (!isDlpAdmin()) {
+    if (!DlpUtils.isDlpAdmin()) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
     }
     try {
@@ -86,7 +85,7 @@ public class DlpItemRestServices implements ResourceContainer {
   public Response deleteDlpDocumentById(@ApiParam(value = "Document id", required = true)
   @PathParam("id")
   Long id) {
-    if (!isDlpAdmin()) {
+    if (!DlpUtils.isDlpAdmin()) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
     }
     dlpPositiveItemService.deleteDlpPositiveItem(id);
@@ -101,7 +100,7 @@ public class DlpItemRestServices implements ResourceContainer {
       @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
       @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error") })
   public Response getDlpKeywords() {
-    if (!isDlpAdmin()) {
+    if (!DlpUtils.isDlpAdmin()) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
     }
     try {
@@ -122,7 +121,7 @@ public class DlpItemRestServices implements ResourceContainer {
       @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error") })
   public Response setDlpKeywords(@ApiParam(value = "keywords", required = true)
   String keywords) {
-    if (!isDlpAdmin()) {
+    if (!DlpUtils.isDlpAdmin()) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
     }
     try {
@@ -145,7 +144,7 @@ public class DlpItemRestServices implements ResourceContainer {
   public Response restoreDlpPositiveItems(@ApiParam(value = "Document id", required = true)
   @PathParam("id")
   Long id) {
-    if (!isDlpAdmin()) {
+    if (!DlpUtils.isDlpAdmin()) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
     }
     try {
@@ -155,10 +154,5 @@ public class DlpItemRestServices implements ResourceContainer {
       LOG.error("Unknown error occurred while restoring dlp positive items", e);
       return Response.serverError().build();
     }
-  }
-
-  private boolean isDlpAdmin() {
-    UserACL userACL = CommonsUtils.getService(UserACL.class);
-    return userACL.isSuperUser() || userACL.isUserInGroup(userACL.getDlpGroups());
   }
 }

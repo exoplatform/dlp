@@ -1,15 +1,5 @@
 package org.exoplatform.dlp.rest;
 
-import org.exoplatform.common.http.HTTPStatus;
-import org.exoplatform.commons.api.settings.ExoFeatureService;
-import org.exoplatform.commons.utils.CommonsUtils;
-import org.exoplatform.portal.config.UserACL;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.services.rest.resource.ResourceContainer;
-
-import io.swagger.annotations.*;
-
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -17,6 +7,20 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import org.exoplatform.common.http.HTTPStatus;
+import org.exoplatform.commons.api.settings.ExoFeatureService;
+import org.exoplatform.commons.utils.CommonsUtils;
+import org.exoplatform.dlp.utils.DlpUtils;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.services.rest.resource.ResourceContainer;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @Path("/dlp")
 @Api(value = "/dlp", description = "Manages Dlp features")
@@ -40,7 +44,7 @@ public class DlpRestServices implements ResourceContainer {
   String isActive) {
 
     try {
-      if (!isDlpAdmin()) {
+      if (!DlpUtils.isDlpAdmin()) {
         return Response.status(Response.Status.UNAUTHORIZED).build();
       }
       ExoFeatureService featureService = CommonsUtils.getService(ExoFeatureService.class);
@@ -51,10 +55,5 @@ public class DlpRestServices implements ResourceContainer {
       LOG.warn("Error when changing feature activation with name '{}'", DLP_FEATURE, e);
       return Response.serverError().entity(e.getMessage()).build();
     }
-  }
-
-  private boolean isDlpAdmin() {
-    UserACL userACL = CommonsUtils.getService(UserACL.class);
-    return userACL.isSuperUser() || userACL.isUserInGroup(userACL.getDlpGroups());
   }
 }

@@ -5,6 +5,7 @@ import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.dlp.connector.DlpServiceConnector;
 import org.exoplatform.dlp.processor.DlpOperationProcessor;
+import org.exoplatform.portal.config.UserACL;
 import org.exoplatform.social.notification.LinkProviderUtils;
 
 public class DlpUtils {
@@ -20,6 +21,8 @@ public class DlpUtils {
   public static final String TYPE = "file";
   
   private static final String COLLABORATION_WS = "collaboration";
+  
+  private static final String DLP_GROUP = "/platform/dlp";
   
   /**
    * Gets the link of quarantine page
@@ -57,5 +60,10 @@ public class DlpUtils {
    */
   public static String getDlpRestoredUrl(String reference) {
     return LinkProviderUtils.getBasePrivateRestUrl() + "/documents/view/" + COLLABORATION_WS + "/" + reference;
+  }
+  
+  public static boolean isDlpAdmin() {
+    UserACL userACL = CommonsUtils.getService(UserACL.class);
+    return userACL.isSuperUser() || userACL.isUserInGroup(DLP_GROUP);
   }
 }
