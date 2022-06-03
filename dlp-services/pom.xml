@@ -18,9 +18,14 @@
     </dependency>
     <dependency>
       <groupId>org.exoplatform.social</groupId>
-      <artifactId>social-component-notification</artifactId>
+      <artifactId>social-component-api</artifactId>
       <scope>provided</scope>
     </dependency>
+    <!--dependency>
+      <groupId>org.exoplatform.social</groupId>
+      <artifactId>social-component-core</artifactId>
+      <scope>provided</scope>
+    </dependency-->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>dlp-api</artifactId>
@@ -51,6 +56,11 @@
       <artifactId>commons-testing</artifactId>
       <scope>test</scope>
     </dependency>
+	<!--dependency>
+      <groupId>org.exoplatform.social</groupId>
+      <artifactId>social-component-notification</artifactId>
+      <scope>test</scope>
+    </dependency-->
   </dependencies>
   <build>
     <finalName>dlp-services</finalName>

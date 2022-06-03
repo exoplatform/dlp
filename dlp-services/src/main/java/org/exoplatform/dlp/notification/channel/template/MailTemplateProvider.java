@@ -17,7 +17,6 @@ import org.exoplatform.dlp.notification.plugin.DlpAdminDetectedItemPlugin;
 import org.exoplatform.dlp.notification.plugin.DlpUserDetectedItemPlugin;
 import org.exoplatform.dlp.notification.plugin.DlpUserRestoredItemPlugin;
 import org.exoplatform.dlp.utils.DlpUtils;
-import org.exoplatform.social.notification.plugin.SocialNotificationUtils;
 
 @TemplateConfigs(templates = {
     @TemplateConfig(pluginId = DlpAdminDetectedItemPlugin.ID, template = "war:/notification/templates/DlpAdminDetectedItemPlugin.gtmpl"),
@@ -36,7 +35,8 @@ public class MailTemplateProvider extends TemplateProvider {
 
       String language = getLanguage(notification);
       TemplateContext templateContext = new TemplateContext(notification.getKey().getId(), language);
-      SocialNotificationUtils.addFooterAndFirstName(notification.getTo(), templateContext);
+      //TODO commented for test not working
+      //SocialNotificationUtils.addFooterAndFirstName(notification.getTo(), templateContext);
 
       templateContext.put("ITEM_TITLE", notification.getValueOwnerParameter("itemTitle"));
       templateContext.put("DLP_PAGE_URL", DlpUtils.getQuarantineRedirectURL(notification.getTo()));
@@ -64,7 +64,7 @@ public class MailTemplateProvider extends TemplateProvider {
 
       String language = getLanguage(notification);
       TemplateContext templateContext = new TemplateContext(notification.getKey().getId(), language);
-      SocialNotificationUtils.addFooterAndFirstName(notification.getTo(), templateContext);
+      //SocialNotificationUtils.addFooterAndFirstName(notification.getTo(), templateContext);
 
       templateContext.put("ITEM_TITLE", notification.getValueOwnerParameter("itemTitle"));
       templateContext.put("ITEM_AUTHOR", notification.getValueOwnerParameter("itemAuthor"));
@@ -92,7 +92,8 @@ public class MailTemplateProvider extends TemplateProvider {
 
       String language = getLanguage(notification);
       TemplateContext templateContext = new TemplateContext(notification.getKey().getId(), language);
-      SocialNotificationUtils.addFooterAndFirstName(notification.getTo(), templateContext);
+      //TODO commented for test not working
+//      SocialNotificationUtils.addFooterAndFirstName(notification.getTo(), templateContext);
       templateContext.put("ITEM_TITLE", notification.getValueOwnerParameter("itemTitle"));
       templateContext.put("ITEM_URL", DlpUtils.getDlpRestoredUrl(notification.getValueOwnerParameter("itemReference")));
 

@@ -6,7 +6,6 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.dlp.connector.DlpServiceConnector;
 import org.exoplatform.dlp.processor.DlpOperationProcessor;
 import org.exoplatform.portal.config.UserACL;
-import org.exoplatform.social.notification.LinkProviderUtils;
 
 public class DlpUtils {
   
@@ -23,6 +22,8 @@ public class DlpUtils {
   private static final String COLLABORATION_WS = "collaboration";
   
   private static final String DLP_GROUP = "/platform/dlp";
+  
+  public static final String PRIVATE_PATH = "/private";
   
   /**
    * Gets the link of quarantine page
@@ -59,7 +60,8 @@ public class DlpUtils {
    * @return the Redirect restored item url
    */
   public static String getDlpRestoredUrl(String reference) {
-    return LinkProviderUtils.getBasePrivateRestUrl() + "/documents/view/" + COLLABORATION_WS + "/" + reference;
+    String basePrivateRestUrl = new StringBuffer(CommonsUtils.getCurrentDomain()).append("/").append(CommonsUtils.getRestContextName()).append(PRIVATE_PATH).toString();
+    return basePrivateRestUrl + "/documents/view/" + COLLABORATION_WS + "/" + reference;
   }
   
   public static boolean isDlpAdmin() {
