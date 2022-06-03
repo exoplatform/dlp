@@ -54,7 +54,7 @@ public class RestoredDlpItemDAOTest {
   @Test
   public void testFindRestoredDlpItemByReference() {
     // Given
-    assertEquals(restoredDlpItemDAO.findAll().size(), 0);
+    assertEquals(0, restoredDlpItemDAO.findAll().size());
     assertEquals(null, restoredDlpItemDAO.findRestoredDlpItemByReference("001002003"));
 
     // When

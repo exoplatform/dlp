@@ -9,7 +9,6 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
 import org.exoplatform.services.listener.*;
-import org.exoplatform.social.core.storage.api.ActivityStorage;
 
 @Asynchronous
 public class DlpActivityAttachmentListener extends Listener<Object, Object> {
@@ -22,7 +21,8 @@ public class DlpActivityAttachmentListener extends Listener<Object, Object> {
   private DlpPositiveItemService dlpPositiveItemService;
 
   public DlpActivityAttachmentListener(DlpPositiveItemService dlpPositiveItemService,
-                                       ActivityStorage activityStorage,
+                                       //TODO commented for test not working
+                                       //ActivityStorage activityStorage,
                                        PortalContainer container) {
     this.container = container;
     this.dlpPositiveItemService = dlpPositiveItemService;
@@ -66,11 +66,10 @@ public class DlpActivityAttachmentListener extends Listener<Object, Object> {
         }
         attachmentId = quarantineItem.getReference();
       }
-      if (StringUtils.isBlank(attachmentId)) {
-        return;
-      }
       //TODO commented for test not working
-//      activityStorage.clearActivityCachedByAttachmentId(attachmentId);
+      if (!StringUtils.isBlank(attachmentId)) {
+//        activityStorage.clearActivityCachedByAttachmentId(attachmentId);
+      }
     } finally {
       RequestLifeCycle.end();
     }

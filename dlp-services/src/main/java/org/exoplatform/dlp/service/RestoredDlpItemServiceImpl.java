@@ -48,7 +48,7 @@ public class RestoredDlpItemServiceImpl implements RestoredDlpItemService {
     }
   }
 
-  private RestoredDlpItem fillRestoredDlpItemFromEntity(RestoredDlpItemEntity restoredDlpItemEntity) throws Exception {
+  private RestoredDlpItem fillRestoredDlpItemFromEntity(RestoredDlpItemEntity restoredDlpItemEntity) {
     RestoredDlpItem restoredDlpItem = new RestoredDlpItem();
     restoredDlpItem.setId(restoredDlpItemEntity.getId());
     restoredDlpItem.setReference(restoredDlpItemEntity.getReference());

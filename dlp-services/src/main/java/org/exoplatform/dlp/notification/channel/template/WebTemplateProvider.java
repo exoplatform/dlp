@@ -20,8 +20,6 @@ import org.exoplatform.dlp.notification.plugin.DlpAdminDetectedItemPlugin;
 import org.exoplatform.dlp.notification.plugin.DlpUserDetectedItemPlugin;
 import org.exoplatform.dlp.notification.plugin.DlpUserRestoredItemPlugin;
 import org.exoplatform.dlp.utils.DlpUtils;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
 import org.exoplatform.webui.utils.TimeConvertUtils;
 
 @TemplateConfigs (
@@ -32,16 +30,19 @@ import org.exoplatform.webui.utils.TimeConvertUtils;
    }
 )
 public class WebTemplateProvider extends TemplateProvider {
-  private static final Log        LOG                          = ExoLogger.getLogger(WebTemplateProvider.class);
 
-  private static final String ACCEPT_INVITATION_TO_CONNECT = "social/intranet-notification/confirmInvitationToConnect";
-  private static final String REFUSE_INVITATION_TO_CONNECT = "social/intranet-notification/ignoreInvitationToConnect";
-  private static final String VALIDATE_SPACE_REQUEST = "social/intranet-notification/validateRequestToJoinSpace";
-  private static final String REFUSE_SPACE_REQUEST = "social/intranet-notification/refuseRequestToJoinSpace";
-  private static final String ACCEPT_SPACE_INVITATION = "social/intranet-notification/acceptInvitationToJoinSpace";
-  private static final String REFUSE_SPACE_INVITATION = "social/intranet-notification/ignoreInvitationToJoinSpace";
-  private static final String MESSAGE_JSON_FILE_NAME = "message.json";
-
+  private static final String IS_INTRANET = "isIntranet";
+  private static final String READ = "READ";
+  private static final String NOTIFICATION_ID = "NOTIFICATION_ID";
+  private static final String LAST_UPDATED_TIME = "LAST_UPDATED_TIME";
+  private static final String ITEM_TITLE = "ITEM_TITLE";
+  private static final String DLP_PAGE_URL = "DLP_PAGE_URL";
+  private static final String ITEM_URL = "ITEM_URL";
+  private static final String DATE_FORMAT = "EE, dd yyyy";
+  private static final String ITEM_TITLE_NOTIFICATION_PARAM = "itemTitle";
+  private static final String READ_NOTIFICATION_PARAM = "read";
+  private static final String UNREAD_NOTIFICATION_PARAM = "unread";
+  
   /**
    * Defines the template builder for DlpUserDetectedItemPlugin
    */
@@ -55,13 +56,13 @@ public class WebTemplateProvider extends TemplateProvider {
 
       TemplateContext templateContext = TemplateContext.newChannelInstance(getChannelKey(), notification.getKey().getId(), language);
 
-      templateContext.put("isIntranet", "true");
+      templateContext.put(IS_INTRANET, "true");
       Calendar cal = Calendar.getInstance();
       cal.setTimeInMillis(notification.getLastModifiedDate());
-      templateContext.put("READ", Boolean.valueOf(notification.getValueOwnerParameter(NotificationMessageUtils.READ_PORPERTY.getKey())) ? "read" : "unread");
-      templateContext.put("NOTIFICATION_ID", notification.getId());
-      templateContext.put("LAST_UPDATED_TIME", TimeConvertUtils.convertXTimeAgoByTimeServer(cal.getTime(), "EE, dd yyyy", new Locale(language), TimeConvertUtils.YEAR));
-      templateContext.put("ITEM_TITLE", notification.getValueOwnerParameter("itemTitle"));
+      templateContext.put(READ, Boolean.TRUE.equals(Boolean.valueOf(notification.getValueOwnerParameter(NotificationMessageUtils.READ_PORPERTY.getKey())) ? READ_NOTIFICATION_PARAM : UNREAD_NOTIFICATION_PARAM));
+      templateContext.put(NOTIFICATION_ID, notification.getId());
+      templateContext.put(LAST_UPDATED_TIME, TimeConvertUtils.convertXTimeAgoByTimeServer(cal.getTime(), DATE_FORMAT, new Locale(language), TimeConvertUtils.YEAR));
+      templateContext.put(ITEM_TITLE, notification.getValueOwnerParameter(ITEM_TITLE_NOTIFICATION_PARAM));
       //
       String body = TemplateUtils.processGroovy(templateContext);
       //binding the exception throws by processing template
@@ -90,14 +91,14 @@ public class WebTemplateProvider extends TemplateProvider {
 
       TemplateContext templateContext = TemplateContext.newChannelInstance(getChannelKey(), notification.getKey().getId(), language);
 
-      templateContext.put("isIntranet", "true");
+      templateContext.put(IS_INTRANET, "true");
       Calendar cal = Calendar.getInstance();
       cal.setTimeInMillis(notification.getLastModifiedDate());
-      templateContext.put("READ", Boolean.valueOf(notification.getValueOwnerParameter(NotificationMessageUtils.READ_PORPERTY.getKey())) ? "read" : "unread");
-      templateContext.put("NOTIFICATION_ID", notification.getId());
-      templateContext.put("LAST_UPDATED_TIME", TimeConvertUtils.convertXTimeAgoByTimeServer(cal.getTime(), "EE, dd yyyy", new Locale(language), TimeConvertUtils.YEAR));
-      templateContext.put("ITEM_TITLE", notification.getValueOwnerParameter("itemTitle"));
-      templateContext.put("DLP_PAGE_URL", DlpUtils.getQuarantinePageUri(notification.getTo()));
+      templateContext.put(READ, Boolean.TRUE.equals(Boolean.valueOf(notification.getValueOwnerParameter(NotificationMessageUtils.READ_PORPERTY.getKey()))) ? READ_NOTIFICATION_PARAM : UNREAD_NOTIFICATION_PARAM);
+      templateContext.put(NOTIFICATION_ID, notification.getId());
+      templateContext.put(LAST_UPDATED_TIME, TimeConvertUtils.convertXTimeAgoByTimeServer(cal.getTime(), DATE_FORMAT, new Locale(language), TimeConvertUtils.YEAR));
+      templateContext.put(ITEM_TITLE, notification.getValueOwnerParameter(ITEM_TITLE_NOTIFICATION_PARAM));
+      templateContext.put(DLP_PAGE_URL, DlpUtils.getQuarantinePageUri());
       //
       String body = TemplateUtils.processGroovy(templateContext);
       //binding the exception throws by processing template
@@ -125,14 +126,14 @@ public class WebTemplateProvider extends TemplateProvider {
 
       TemplateContext templateContext = TemplateContext.newChannelInstance(getChannelKey(), notification.getKey().getId(), language);
 
-      templateContext.put("isIntranet", "true");
+      templateContext.put(IS_INTRANET, "true");
       Calendar cal = Calendar.getInstance();
       cal.setTimeInMillis(notification.getLastModifiedDate());
-      templateContext.put("READ", Boolean.valueOf(notification.getValueOwnerParameter(NotificationMessageUtils.READ_PORPERTY.getKey())) ? "read" : "unread");
-      templateContext.put("NOTIFICATION_ID", notification.getId());
-      templateContext.put("LAST_UPDATED_TIME", TimeConvertUtils.convertXTimeAgoByTimeServer(cal.getTime(), "EE, dd yyyy", new Locale(language), TimeConvertUtils.YEAR));
-      templateContext.put("ITEM_TITLE", notification.getValueOwnerParameter("itemTitle"));
-      templateContext.put("ITEM_URL", DlpUtils.getDlpRestoredUri(notification.getValueOwnerParameter("itemReference")));
+      templateContext.put(READ, Boolean.TRUE.equals(Boolean.valueOf(notification.getValueOwnerParameter(NotificationMessageUtils.READ_PORPERTY.getKey()))) ? READ_NOTIFICATION_PARAM : UNREAD_NOTIFICATION_PARAM);
+      templateContext.put(NOTIFICATION_ID, notification.getId());
+      templateContext.put(LAST_UPDATED_TIME, TimeConvertUtils.convertXTimeAgoByTimeServer(cal.getTime(), DATE_FORMAT, new Locale(language), TimeConvertUtils.YEAR));
+      templateContext.put(ITEM_TITLE, notification.getValueOwnerParameter(ITEM_TITLE_NOTIFICATION_PARAM));
+      templateContext.put(ITEM_URL, DlpUtils.getDlpRestoredUri(notification.getValueOwnerParameter("itemReference")));
 
       String body = TemplateUtils.processGroovy(templateContext);
       //binding the exception throws by processing template

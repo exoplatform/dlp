@@ -77,7 +77,7 @@ public class DlpPositiveItemServiceTest {
     UserImpl user = new UserImpl();
     user.setUserName("root");
     user.setFullName("root root");
-    Mockito.when(userHandler.findUserByName(Mockito.eq("root"))).thenReturn(user);
+    Mockito.when(userHandler.findUserByName("root")).thenReturn(user);
     PortalContainer container = PortalContainer.getInstance();
     dlpPositiveItemDAO = container.getComponentInstanceOfType(DlpPositiveItemDAO.class);
     ExoContainerContext.setCurrentContainer(container);
@@ -169,13 +169,13 @@ public class DlpPositiveItemServiceTest {
 
     // Then
     assertNotNull(dlpPositiveItems);
-    assertEquals(size.intValue(), 3);
+    assertEquals(3, size.intValue());
 
     // when
     dlpPositiveItemService.deleteDlpPositiveItem(dlpPositiveItems.get(0).getId());
     size = dlpPositiveItemService.getDlpPositiveItemsCount();
 
     // then
-    assertEquals(size.intValue(), 2);
+    assertEquals(2, size.intValue());
   }
 }

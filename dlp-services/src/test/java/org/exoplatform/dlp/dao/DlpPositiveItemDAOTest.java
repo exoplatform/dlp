@@ -2,6 +2,7 @@ package org.exoplatform.dlp.dao;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class DlpPositiveItemDAOTest {
   public void testDlpPositiveItemsCreation() {
     // Given
     List<DlpPositiveItemEntity> dlpPositiveItemEntities = dlpPositiveItemDAO.getDlpPositiveItems(0, 20);
-    assertEquals(dlpPositiveItemEntities.size(), 0);
+    assertEquals(0, dlpPositiveItemEntities.size());
 
     // When
     DlpPositiveItemEntity dlpPositiveItemEntity = new DlpPositiveItemEntity();
@@ -57,14 +58,14 @@ public class DlpPositiveItemDAOTest {
 
     // Then
     dlpPositiveItemEntities = dlpPositiveItemDAO.getDlpPositiveItems(0, 20);
-    assertEquals(dlpPositiveItemEntities.size(), 3);
+    assertEquals(3, dlpPositiveItemEntities.size());
   }
 
   @Test
   public void testFindDlpPositiveItemByReference() {
     // Given
-    assertEquals(dlpPositiveItemDAO.findAll().size(), 0);
-    assertEquals(null, dlpPositiveItemDAO.findDlpPositiveItemByReference("ref1"));
+    assertEquals(0, dlpPositiveItemDAO.findAll().size());
+    assertNull(dlpPositiveItemDAO.findDlpPositiveItemByReference("ref1"));
 
     // When
     DlpPositiveItemEntity dlpPositiveItemEntity = new DlpPositiveItemEntity();
@@ -100,7 +101,7 @@ public class DlpPositiveItemDAOTest {
   public void testDlpPositiveItemsCreationWithLongKeyword() {
     // Given
     List<DlpPositiveItemEntity> dlpPositiveItemEntities = dlpPositiveItemDAO.getDlpPositiveItems(0, 20);
-    assertEquals(dlpPositiveItemEntities.size(), 0);
+    assertEquals(0, dlpPositiveItemEntities.size());
 
     // When
     DlpPositiveItemEntity dlpPositiveItemEntity = new DlpPositiveItemEntity();
@@ -111,6 +112,6 @@ public class DlpPositiveItemDAOTest {
 
     // Then
     dlpPositiveItemEntities = dlpPositiveItemDAO.getDlpPositiveItems(0, 20);
-    assertEquals(dlpPositiveItemEntities.size(), 1);
+    assertEquals(1, dlpPositiveItemEntities.size());
   }
 }

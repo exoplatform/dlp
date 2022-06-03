@@ -118,7 +118,7 @@ public class DlpPositiveItemServiceImpl implements DlpPositiveItemService {
 
   private DlpPositiveItem fillDlpPositiveItemFromEntity(DlpPositiveItemEntity dlpPositiveItemEntity) throws Exception {
     DlpPositiveItem dlpPositiveItem = new DlpPositiveItem();
-    DlpServiceConnector dlpServiceConnector = (DlpServiceConnector) dlpOperationProcessor.getConnectors()
+    DlpServiceConnector dlpServiceConnector = dlpOperationProcessor.getConnectors()
                                                                                          .get(dlpPositiveItemEntity.getType());
     dlpPositiveItem.setId(dlpPositiveItemEntity.getId());
     dlpPositiveItem.setType(dlpPositiveItemEntity.getType());

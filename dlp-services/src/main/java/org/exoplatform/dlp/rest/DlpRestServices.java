@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @Path("/dlp")
-@Api(value = "/dlp", description = "Manages Dlp features")
+@Api(value = "/dlp")
 public class DlpRestServices implements ResourceContainer {
 
   public static final String DLP_FEATURE = "dlp";

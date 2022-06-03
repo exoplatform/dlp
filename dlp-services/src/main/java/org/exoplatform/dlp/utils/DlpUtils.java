@@ -9,13 +9,13 @@ import org.exoplatform.portal.config.UserACL;
 
 public class DlpUtils {
   
-  public final static ArgumentLiteral<Long> DLP_DETECTED_ITEM_ID = new ArgumentLiteral<>(Long.class, "dlp_detected_item_id");
+  public static final ArgumentLiteral<Long> DLP_DETECTED_ITEM_ID = new ArgumentLiteral<>(Long.class, "dlp_detected_item_id");
 
-  public final static ArgumentLiteral<String> DLP_RESTORED_ITEM_TITLE = new ArgumentLiteral<>(String.class, "dlp_restored_item_title");
+  public static final ArgumentLiteral<String> DLP_RESTORED_ITEM_TITLE = new ArgumentLiteral<>(String.class, "dlp_restored_item_title");
 
-  public final static ArgumentLiteral<String> DLP_RESTORED_ITEM_REFERENCE = new ArgumentLiteral<>(String.class, "dlp_restored_item_reference");
+  public static final ArgumentLiteral<String> DLP_RESTORED_ITEM_REFERENCE = new ArgumentLiteral<>(String.class, "dlp_restored_item_reference");
 
-  public final static ArgumentLiteral<String> DLP_RESTORED_ITEM_AUTHOR = new ArgumentLiteral<>(String.class, "dlp_restored_item_author");
+  public static final ArgumentLiteral<String> DLP_RESTORED_ITEM_AUTHOR = new ArgumentLiteral<>(String.class, "dlp_restored_item_author");
   
   public static final String TYPE = "file";
   
@@ -25,12 +25,16 @@ public class DlpUtils {
   
   public static final String PRIVATE_PATH = "/private";
   
+  private DlpUtils() {
+    
+  }
+  
   /**
    * Gets the link of quarantine page
    *
    * @return
    */
-  public static String getQuarantinePageUri(String username) {
+  public static String getQuarantinePageUri() {
     return "/" + PortalContainer.getCurrentPortalContainerName() + "/g/:platform:dlp/dlp-quarantine";
   }
 
@@ -40,8 +44,8 @@ public class DlpUtils {
    */
   public static String getDlpRestoredUri(String reference) {
     DlpOperationProcessor dlpOperationProcessor = CommonsUtils.getService(DlpOperationProcessor.class);
-    DlpServiceConnector dlpServiceConnector = (DlpServiceConnector) dlpOperationProcessor.getConnectors().get(TYPE);
-    return dlpServiceConnector != null ?  "/" + dlpServiceConnector.getItemUrl(reference) : new String();
+    DlpServiceConnector dlpServiceConnector = dlpOperationProcessor.getConnectors().get(TYPE);
+    return dlpServiceConnector != null ?  "/" + dlpServiceConnector.getItemUrl(reference) : "";
   }
   
   /**
@@ -49,7 +53,7 @@ public class DlpUtils {
    *
    * @return the quarantine page url
    */
-  public static String getQuarantineRedirectURL(String username) {
+  public static String getQuarantineRedirectURL() {
     String portal = PortalContainer.getCurrentPortalContainerName();
     return new StringBuffer(CommonsUtils.getCurrentDomain()).append("/").append(portal).append("/").append("g/:platform:dlp/dlp-quarantine").toString();
   }

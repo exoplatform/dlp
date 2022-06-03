@@ -39,13 +39,13 @@ public class DlpOperationDAOTest {
 
     // Given
     List<DlpOperation> dlpOperations = dlpOperationDAO.findAll();
-    assertEquals(dlpOperations.size(), 0);
+    assertEquals(0, dlpOperations.size());
 
     // When
     createDlpOperations();
 
     // Then
-    assertEquals(dlpOperationDAO.findAll().size(), 3);
+    assertEquals(3, dlpOperationDAO.findAll().size());
     dlpOperations = dlpOperationDAO.findAll();
     Field privateField = DlpOperation.class.getDeclaredField("timestamp");
     privateField.setAccessible(true);
@@ -57,35 +57,35 @@ public class DlpOperationDAOTest {
   public void testFindByEntityIdAndType() {
 
     // Given
-    assertEquals(dlpOperationDAO.findAll().size(), 0);
-    assertEquals(dlpOperationDAO.findByEntityIdAndType("1", "file").size(), 0);
-    assertEquals(dlpOperationDAO.findByEntityIdAndType("100", "file").size(), 0);
+    assertEquals(0, dlpOperationDAO.findAll().size());
+    assertEquals(0, dlpOperationDAO.findByEntityIdAndType("1", "file").size());
+    assertEquals(0, dlpOperationDAO.findByEntityIdAndType("100", "file").size());
 
     // When
     createDlpOperations();
 
     // Then
-    assertEquals(dlpOperationDAO.findAll().size(), 3);
-    assertEquals(dlpOperationDAO.findByEntityIdAndType("1", "file").size(), 1);
-    assertEquals(dlpOperationDAO.findByEntityIdAndType("100", "file").size(), 0);
+    assertEquals(3, dlpOperationDAO.findAll().size());
+    assertEquals(1, dlpOperationDAO.findByEntityIdAndType("1", "file").size());
+    assertEquals(0, dlpOperationDAO.findByEntityIdAndType("100", "file").size());
   }
 
   @Test
   public void testFindAllFirst() {
 
     // Given
-    assertEquals(dlpOperationDAO.findAll().size(), 0);
-    assertEquals(dlpOperationDAO.findAllFirstWithOffset(0, 2).size(), 0);
+    assertEquals(0, dlpOperationDAO.findAll().size());
+    assertEquals(0, dlpOperationDAO.findAllFirstWithOffset(0, 2).size());
 
     // When
     createDlpOperations();
 
     // Then
-    assertEquals(dlpOperationDAO.findAll().size(), 3);
-    assertEquals(dlpOperationDAO.findAllFirstWithOffset(0, 2).size(), 2);
-    assertEquals(dlpOperationDAO.findAllFirstWithOffset(0, 2).get(1).getEntityId(), "22");
-    assertEquals(dlpOperationDAO.findAllFirstWithOffset(1, 2).get(0).getEntityId(), "22");
-    assertEquals(dlpOperationDAO.findAllFirstWithOffset(1, 2).get(1).getEntityId(), "100");
+    assertEquals(3, dlpOperationDAO.findAll().size());
+    assertEquals(2, dlpOperationDAO.findAllFirstWithOffset(0, 2).size());
+    assertEquals("22", dlpOperationDAO.findAllFirstWithOffset(0, 2).get(1).getEntityId());
+    assertEquals("22", dlpOperationDAO.findAllFirstWithOffset(1, 2).get(0).getEntityId());
+    assertEquals("100", dlpOperationDAO.findAllFirstWithOffset(1, 2).get(1).getEntityId());
 
   }
 
@@ -93,19 +93,19 @@ public class DlpOperationDAOTest {
   public void testDeleteByEntityId() {
 
     // Given
-    assertEquals(dlpOperationDAO.findAll().size(), 0);
-    assertEquals(dlpOperationDAO.findAllFirstWithOffset(0, 2).size(), 0);
+    assertEquals(0, dlpOperationDAO.findAll().size());
+    assertEquals(0, dlpOperationDAO.findAllFirstWithOffset(0, 2).size());
 
     // When
     createDlpOperations();
     createDlpOperations();
 
     // Then
-    assertEquals(dlpOperationDAO.findAll().size(), 6);
-    assertEquals(dlpOperationDAO.findByEntityIdAndType("22", "file").size(), 2);
+    assertEquals(6, dlpOperationDAO.findAll().size());
+    assertEquals(2, dlpOperationDAO.findByEntityIdAndType("22", "file").size());
     dlpOperationDAO.deleteByEntityId("22");
-    assertEquals(dlpOperationDAO.findByEntityIdAndType("22", "file").size(), 0);
-    assertEquals(dlpOperationDAO.findAll().size(), 4);
+    assertEquals(0, dlpOperationDAO.findByEntityIdAndType("22", "file").size());
+    assertEquals(4, dlpOperationDAO.findAll().size());
 
   }
 

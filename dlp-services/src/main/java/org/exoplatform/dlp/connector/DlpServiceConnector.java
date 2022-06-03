@@ -21,7 +21,7 @@ public abstract class DlpServiceConnector extends BaseComponentPlugin {
    * @param initParams The parameters which are used for initializing the dlp service connector from configuration.
    * @LevelAPI Experimental
    */
-  public DlpServiceConnector(InitParams initParams) {
+  protected DlpServiceConnector(InitParams initParams) {
     PropertiesParam param = initParams.getPropertiesParam("constructor.params");
     this.type = param.getProperty("type");
     this.displayName = param.getProperty("displayName");

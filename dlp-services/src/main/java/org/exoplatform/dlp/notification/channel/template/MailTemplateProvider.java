@@ -24,6 +24,9 @@ import org.exoplatform.dlp.utils.DlpUtils;
     @TemplateConfig(pluginId = DlpUserRestoredItemPlugin.ID, template = "war:/notification/templates/DlpUserRestoredItemPlugin.gtmpl")})
 
 public class MailTemplateProvider extends TemplateProvider {
+  
+  private static final String ITEM_TITLE_NOTIFICATION_PARAM = "itemTitle";
+  private static final String ITEM_TITLE = "ITEM_TITLE";
 
   /** Defines the template builder for DlpAdminDetectedItemPlugin*/
   private AbstractTemplateBuilder dlpAdminDetectedItem = new AbstractTemplateBuilder() {
@@ -38,8 +41,8 @@ public class MailTemplateProvider extends TemplateProvider {
       //TODO commented for test not working
       //SocialNotificationUtils.addFooterAndFirstName(notification.getTo(), templateContext);
 
-      templateContext.put("ITEM_TITLE", notification.getValueOwnerParameter("itemTitle"));
-      templateContext.put("DLP_PAGE_URL", DlpUtils.getQuarantineRedirectURL(notification.getTo()));
+      templateContext.put(ITEM_TITLE, notification.getValueOwnerParameter(ITEM_TITLE_NOTIFICATION_PARAM));
+      templateContext.put("DLP_PAGE_URL", DlpUtils.getQuarantineRedirectURL());
       String subject = TemplateUtils.processSubject(templateContext);
       String body = TemplateUtils.processGroovy(templateContext);
       //binding the exception throws by processing template
@@ -66,7 +69,7 @@ public class MailTemplateProvider extends TemplateProvider {
       TemplateContext templateContext = new TemplateContext(notification.getKey().getId(), language);
       //SocialNotificationUtils.addFooterAndFirstName(notification.getTo(), templateContext);
 
-      templateContext.put("ITEM_TITLE", notification.getValueOwnerParameter("itemTitle"));
+      templateContext.put(ITEM_TITLE, notification.getValueOwnerParameter(ITEM_TITLE_NOTIFICATION_PARAM));
       templateContext.put("ITEM_AUTHOR", notification.getValueOwnerParameter("itemAuthor"));
       String subject = TemplateUtils.processSubject(templateContext);
       String body = TemplateUtils.processGroovy(templateContext);
@@ -94,7 +97,7 @@ public class MailTemplateProvider extends TemplateProvider {
       TemplateContext templateContext = new TemplateContext(notification.getKey().getId(), language);
       //TODO commented for test not working
 //      SocialNotificationUtils.addFooterAndFirstName(notification.getTo(), templateContext);
-      templateContext.put("ITEM_TITLE", notification.getValueOwnerParameter("itemTitle"));
+      templateContext.put(ITEM_TITLE, notification.getValueOwnerParameter(ITEM_TITLE_NOTIFICATION_PARAM));
       templateContext.put("ITEM_URL", DlpUtils.getDlpRestoredUrl(notification.getValueOwnerParameter("itemReference")));
 
       String subject = TemplateUtils.processSubject(templateContext);

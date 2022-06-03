@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -159,13 +160,14 @@ public class DlpOperationProcessorImpl extends DlpOperationProcessor implements 
     int nbElementsStayingInQueue = dlpOperations.size();
 
     // Process dlp operation
-    for (String entityType : dlpQueueSorted.keySet()) {
-      DlpServiceConnector connector = getConnectors().get(entityType);
-      List<DlpOperation> dlpOperationsList = dlpQueueSorted.get(entityType);
+    
+    for (Entry<String, List<DlpOperation>> dlpQueuSortedEntry : dlpQueueSorted.entrySet()) {
+      DlpServiceConnector connector = getConnectors().get(dlpQueuSortedEntry.getKey());
+      List<DlpOperation> dlpOperationsList = dlpQueuSortedEntry.getValue();
       if (dlpOperationsList == null || dlpOperationsList.isEmpty()) {
         continue;
       }
-      LOGGER.debug("Will proceed to DLP operation list for type {}, size {}", entityType, dlpOperationsList.size());
+      LOGGER.debug("Will proceed to DLP operation list for type {}, size {}", dlpQueuSortedEntry.getKey(), dlpOperationsList.size());
       Iterator<DlpOperation> dlpOperationsIterator = dlpOperationsList.iterator();
       while (dlpOperationsIterator.hasNext()) {
         if (isInterrupted()) {
@@ -192,7 +194,7 @@ public class DlpOperationProcessorImpl extends DlpOperationProcessor implements 
     // Check if the operation map already contains a specific type
     if (!dlpQueueSorted.containsKey(dlpOperation.getEntityType())) {
       // If not add a new type for the operation above
-      dlpQueueSorted.put(dlpOperation.getEntityType(), new ArrayList<DlpOperation>());
+      dlpQueueSorted.put(dlpOperation.getEntityType(), new ArrayList<>());
     }
     // Add the dlp operation in the specific Operation -> Type
     dlpQueueSorted.get(dlpOperation.getEntityType()).add(dlpOperation);

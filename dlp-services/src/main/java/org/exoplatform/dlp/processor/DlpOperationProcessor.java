@@ -13,7 +13,7 @@ public abstract class DlpOperationProcessor {
 
   public static final String               DLP_FEATURE = "dlp";
 
-  private Map<String, DlpServiceConnector> connectors  = new HashMap<String, DlpServiceConnector>();
+  private Map<String, DlpServiceConnector> connectors  = new HashMap<>();
 
   /**
    * Add Dlp Connector to the service
