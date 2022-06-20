@@ -5,18 +5,6 @@
   xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd http://www.exoplatform.org/xml/ns/kernel_1_3.xsd"
   xmlns="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd">
 
-  <component>
-    <key>org.exoplatform.portal.config.UserACL</key>
-    <type>org.exoplatform.portal.config.UserACL</type>
-    <init-params>
-      <value-param>
-        <name>portal.dlp.groups</name>
-        <description>dlp</description>
-        <value>/platform/dlp</value>
-      </value-param>
-    </init-params>
-  </component>
-
   <external-component-plugins>
     <target-component>org.exoplatform.portal.config.UserPortalConfigService</target-component>
     <component-plugin>

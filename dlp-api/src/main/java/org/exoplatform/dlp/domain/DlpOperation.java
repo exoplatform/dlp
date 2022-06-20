@@ -2,6 +2,7 @@ package org.exoplatform.dlp.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -86,14 +87,9 @@ public class DlpOperation implements Serializable {
 
     DlpOperation that = (DlpOperation) o;
 
-    if (entityId != null ? !entityId.equals(that.entityId) : that.entityId != null)
-      return false;
-    if (entityType != null ? !entityType.equals(that.entityType) : that.entityType != null)
-      return false;
-    if (id != null ? !id.equals(that.id) : that.id != null)
-      return false;
-
-    return true;
+    return Objects.equals(entityId, that.entityId)
+            && Objects.equals(entityType, that.entityType)
+            && Objects.equals(id, that.id);
   }
 
   @Override

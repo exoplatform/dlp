@@ -10,6 +10,9 @@ if (extensionRegistry) {
   }
 }
 
+Vue.use(Vuetify);
+const vuetify = new Vuetify(eXo.env.portal.vuetifyPreset);
+
 document.dispatchEvent(new CustomEvent('displayTopBarLoading'));
 
 const appId = 'dlpQuarantine';
@@ -22,17 +25,15 @@ const url = `${eXo.env.portal.context}/${eXo.env.portal.rest}/i18n/bundle/locale
 
 export function init() {
   exoi18n.loadLanguageAsync(lang, url).then(i18n => {
-    const appElement = document.createElement('div');
-    appElement.id = appId;
 
     // init Vue app when locale ressources are ready
     Vue.createApp({
       mounted() {
         document.dispatchEvent(new CustomEvent('hideTopBarLoading'));
       },
-      template: `<dlp-quarantine-app v-cacheable id="${appId}" />`,
-      vuetify: Vue.prototype.vuetifyOptions,
+      template: `<dlp-quarantine-app  id="${appId}" />`,
+      vuetify,
       i18n
-    }, appElement, 'DLP Quarantine');
+    },  `#${appId}`, 'DLP Quarantine');
   });
 }

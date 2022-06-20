@@ -15,8 +15,12 @@
   <property name="now" value="CURRENT_TIMESTAMP" dbms="mssql"/>
 
   <changeSet author="exo-dlp" id="1.0.0-1">
-    <validCheckSum>7:b54b6e49ddca16ea0da164e636e5b8a2</validCheckSum>
-    <validCheckSum>7:409e3990dbb962c0a47a475a574665ce</validCheckSum>
+    <validCheckSum>ANY</validCheckSum>
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="DLP_QUEUE"/>
+      </not>
+    </preConditions>
     <createTable tableName="DLP_QUEUE">
       <column name="OPERATION_ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
         <constraints nullable="false" primaryKey="true" primaryKeyName="PK_DLP_QUEUE"/>
@@ -43,6 +47,11 @@
   </changeSet>
 
   <changeSet author="exo-dlp" id="1.0.0-3">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="DLP_POSITIVE_ITEMS"/>
+      </not>
+    </preConditions>
     <createTable tableName="DLP_POSITIVE_ITEMS">
       <column name="ITEM_ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
         <constraints nullable="false" primaryKey="true" primaryKeyName="PK_DLP_ITEMS"/>
@@ -59,6 +68,11 @@
   </changeSet>
 
   <changeSet author="exo-dlp" id="1.0.0-5">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <columnExists columnName="ITEM_AUTHOR" tableName="DLP_POSITIVE_ITEMS"/>
+      </not>
+    </preConditions>
     <addColumn tableName="DLP_POSITIVE_ITEMS">
       <column name="ITEM_AUTHOR" type="VARCHAR(50)"/>
       <column name="ITEM_TITLE" type="VARCHAR(250)"/>
@@ -66,6 +80,11 @@
   </changeSet>
 
   <changeSet author="exo-dlp" id="1.0.0-6">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="RESTORED_DLP_ITEMS"/>
+      </not>
+    </preConditions>
     <createTable tableName="RESTORED_DLP_ITEMS">
       <column name="RESTORED_ITEM_ID" type="BIGINT" autoIncrement="${autoIncrement}" startWith="1">
         <constraints nullable="false" primaryKey="true" primaryKeyName="PK_RESTORED_DLP_ITEMS"/>

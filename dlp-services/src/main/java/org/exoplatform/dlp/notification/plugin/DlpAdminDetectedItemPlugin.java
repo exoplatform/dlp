@@ -21,24 +21,22 @@ import java.util.stream.Collectors;
 
 public class DlpAdminDetectedItemPlugin extends BaseNotificationPlugin {
 
-  public static final String     ID     = "DlpAdminDetectedItemPlugin";
+  public static final String     ID        = "DlpAdminDetectedItemPlugin";
 
-  private static final Log       LOGGER = ExoLogger.getExoLogger(DlpAdminDetectedItemPlugin.class);
+  private static final String    DLP_GROUP = "/platform/dlp";
+
+  private static final Log       LOGGER    = ExoLogger.getExoLogger(DlpAdminDetectedItemPlugin.class);
 
   private DlpPositiveItemService dlpPositiveItemService;
 
   private OrganizationService    organizationService;
 
-  private UserACL                userACL;
-
   public DlpAdminDetectedItemPlugin(InitParams initParams,
                                     DlpPositiveItemService dlpPositiveItemService,
-                                    OrganizationService organizationService,
-                                    UserACL userACL) {
+                                    OrganizationService organizationService) {
     super(initParams);
     this.dlpPositiveItemService = dlpPositiveItemService;
     this.organizationService = organizationService;
-    this.userACL = userACL;
   }
 
   @Override
@@ -69,7 +67,7 @@ public class DlpAdminDetectedItemPlugin extends BaseNotificationPlugin {
     // Get DLP members group
     List<String> members = new ArrayList<>();
     try {
-      ListAccess<User> dlpMembersAccess = organizationService.getUserHandler().findUsersByGroupId(userACL.getDlpGroups());
+      ListAccess<User> dlpMembersAccess = organizationService.getUserHandler().findUsersByGroupId(DLP_GROUP);
       int totalAdminGroupMembersSize = dlpMembersAccess.getSize();
       User[] users = dlpMembersAccess.load(0, totalAdminGroupMembersSize);
       return Arrays.stream(users).map(User::getUserName).collect(Collectors.toList());

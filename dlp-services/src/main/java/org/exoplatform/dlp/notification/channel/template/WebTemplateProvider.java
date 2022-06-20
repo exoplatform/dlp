@@ -4,6 +4,7 @@ import java.io.Writer;
 import java.util.Calendar;
 import java.util.Locale;
 
+import org.apache.ecs.wml.B;
 import org.exoplatform.commons.api.notification.NotificationContext;
 import org.exoplatform.commons.api.notification.NotificationMessageUtils;
 import org.exoplatform.commons.api.notification.annotation.TemplateConfig;
@@ -59,7 +60,8 @@ public class WebTemplateProvider extends TemplateProvider {
       templateContext.put(IS_INTRANET, "true");
       Calendar cal = Calendar.getInstance();
       cal.setTimeInMillis(notification.getLastModifiedDate());
-      templateContext.put(READ, Boolean.TRUE.equals(Boolean.valueOf(notification.getValueOwnerParameter(NotificationMessageUtils.READ_PORPERTY.getKey())) ? READ_NOTIFICATION_PARAM : UNREAD_NOTIFICATION_PARAM));
+      Boolean read = Boolean.valueOf(notification.getValueOwnerParameter(NotificationMessageUtils.READ_PORPERTY.getKey()));
+      templateContext.put(READ, read);
       templateContext.put(NOTIFICATION_ID, notification.getId());
       templateContext.put(LAST_UPDATED_TIME, TimeConvertUtils.convertXTimeAgoByTimeServer(cal.getTime(), DATE_FORMAT, new Locale(language), TimeConvertUtils.YEAR));
       templateContext.put(ITEM_TITLE, notification.getValueOwnerParameter(ITEM_TITLE_NOTIFICATION_PARAM));
