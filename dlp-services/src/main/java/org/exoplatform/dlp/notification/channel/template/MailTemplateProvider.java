@@ -17,6 +17,7 @@ import org.exoplatform.dlp.notification.plugin.DlpAdminDetectedItemPlugin;
 import org.exoplatform.dlp.notification.plugin.DlpUserDetectedItemPlugin;
 import org.exoplatform.dlp.notification.plugin.DlpUserRestoredItemPlugin;
 import org.exoplatform.dlp.utils.DlpUtils;
+import org.exoplatform.social.notification.plugin.SocialNotificationUtils;
 
 @TemplateConfigs(templates = {
     @TemplateConfig(pluginId = DlpAdminDetectedItemPlugin.ID, template = "war:/notification/templates/DlpAdminDetectedItemPlugin.gtmpl"),
@@ -24,7 +25,7 @@ import org.exoplatform.dlp.utils.DlpUtils;
     @TemplateConfig(pluginId = DlpUserRestoredItemPlugin.ID, template = "war:/notification/templates/DlpUserRestoredItemPlugin.gtmpl")})
 
 public class MailTemplateProvider extends TemplateProvider {
-  
+
   private static final String ITEM_TITLE_NOTIFICATION_PARAM = "itemTitle";
   private static final String ITEM_TITLE = "ITEM_TITLE";
 
@@ -38,11 +39,9 @@ public class MailTemplateProvider extends TemplateProvider {
 
       String language = getLanguage(notification);
       TemplateContext templateContext = new TemplateContext(notification.getKey().getId(), language);
-      //TODO commented for test not working
-      //SocialNotificationUtils.addFooterAndFirstName(notification.getTo(), templateContext);
-
       templateContext.put(ITEM_TITLE, notification.getValueOwnerParameter(ITEM_TITLE_NOTIFICATION_PARAM));
       templateContext.put("DLP_PAGE_URL", DlpUtils.getQuarantineRedirectURL());
+      SocialNotificationUtils.addFooterAndFirstName(notification.getTo(), templateContext);
       String subject = TemplateUtils.processSubject(templateContext);
       String body = TemplateUtils.processGroovy(templateContext);
       //binding the exception throws by processing template
@@ -67,7 +66,7 @@ public class MailTemplateProvider extends TemplateProvider {
 
       String language = getLanguage(notification);
       TemplateContext templateContext = new TemplateContext(notification.getKey().getId(), language);
-      //SocialNotificationUtils.addFooterAndFirstName(notification.getTo(), templateContext);
+      SocialNotificationUtils.addFooterAndFirstName(notification.getTo(), templateContext);
 
       templateContext.put(ITEM_TITLE, notification.getValueOwnerParameter(ITEM_TITLE_NOTIFICATION_PARAM));
       templateContext.put("ITEM_AUTHOR", notification.getValueOwnerParameter("itemAuthor"));
@@ -95,8 +94,7 @@ public class MailTemplateProvider extends TemplateProvider {
 
       String language = getLanguage(notification);
       TemplateContext templateContext = new TemplateContext(notification.getKey().getId(), language);
-      //TODO commented for test not working
-//      SocialNotificationUtils.addFooterAndFirstName(notification.getTo(), templateContext);
+       SocialNotificationUtils.addFooterAndFirstName(notification.getTo(), templateContext);
       templateContext.put(ITEM_TITLE, notification.getValueOwnerParameter(ITEM_TITLE_NOTIFICATION_PARAM));
       templateContext.put("ITEM_URL", DlpUtils.getDlpRestoredUrl(notification.getValueOwnerParameter("itemReference")));
 
@@ -113,7 +111,7 @@ public class MailTemplateProvider extends TemplateProvider {
       return false;
     }
   };
-    
+
   public MailTemplateProvider(InitParams initParams) {
     super(initParams);
     this.templateBuilders.put(PluginKey.key(DlpAdminDetectedItemPlugin.ID), dlpAdminDetectedItem);

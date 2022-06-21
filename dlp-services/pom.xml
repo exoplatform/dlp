@@ -8,7 +8,7 @@
   <artifactId>dlp-services</artifactId>
   <name>eXo Data Leak Prevention - Services</name>
   <properties>
-    <exo.test.coverage.ratio>0.3</exo.test.coverage.ratio>
+    <exo.test.coverage.ratio>0.6</exo.test.coverage.ratio>
   </properties>
   <dependencies>
     <dependency>
@@ -34,6 +34,11 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>dlp-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.exoplatform.social</groupId>
+      <artifactId>social-component-notification</artifactId>
       <scope>provided</scope>
     </dependency>
 

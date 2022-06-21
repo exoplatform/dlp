@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 
 <configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:schemaLocation="http://www.exoplatform.org/xml/ns/kernel_1_3.xsd http://www.exoplatform.org/xml/ns/kernel_1_3.xsd"
@@ -23,7 +23,7 @@
               <string>UINotification.label.group.Quarantine</string>
             </field>
             <field name="order">
-              <string>6</string>
+              <string>300</string>
             </field>
           </object>
         </object-param>       
