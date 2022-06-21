@@ -9,35 +9,33 @@ import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.component.RequestLifeCycle;
 import org.exoplatform.services.listener.*;
+import org.exoplatform.social.core.storage.api.ActivityStorage;
+import org.exoplatform.social.core.storage.cache.CachedActivityStorage;
 
 @Asynchronous
 public class DlpActivityAttachmentListener extends Listener<Object, Object> {
 
   private PortalContainer        container;
 
-  //TODO commented for test not working
-//  private CachedActivityStorage  activityStorage;
+  private CachedActivityStorage  activityStorage;
 
   private DlpPositiveItemService dlpPositiveItemService;
 
   public DlpActivityAttachmentListener(DlpPositiveItemService dlpPositiveItemService,
-                                       //TODO commented for test not working
-                                       //ActivityStorage activityStorage,
+                                       ActivityStorage activityStorage,
                                        PortalContainer container) {
     this.container = container;
     this.dlpPositiveItemService = dlpPositiveItemService;
-    //TODO commented for test not working
-//    if (activityStorage instanceof CachedActivityStorage) {
-//      this.activityStorage = (CachedActivityStorage) activityStorage;
-//    }
+    if (activityStorage instanceof CachedActivityStorage) {
+      this.activityStorage = (CachedActivityStorage) activityStorage;
+    }
   }
 
   @Override
   public void onEvent(Event<Object, Object> event) throws Exception {
-    //TODO commented for test not working
-//    if (activityStorage == null) {
-//      return;
-//    }
+    if (activityStorage == null) {
+      return;
+    }
     ExoContainerContext.setCurrentContainer(container);
     RequestLifeCycle.begin(container);
     try {
@@ -66,9 +64,8 @@ public class DlpActivityAttachmentListener extends Listener<Object, Object> {
         }
         attachmentId = quarantineItem.getReference();
       }
-      //TODO commented for test not working
       if (!StringUtils.isBlank(attachmentId)) {
-//        activityStorage.clearActivityCachedByAttachmentId(attachmentId);
+        activityStorage.clearActivityCachedByAttachmentId(attachmentId);
       }
     } finally {
       RequestLifeCycle.end();
