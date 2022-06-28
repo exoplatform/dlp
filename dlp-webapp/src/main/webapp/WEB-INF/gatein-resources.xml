@@ -4,4 +4,35 @@
   xsi:schemaLocation="http://www.exoplatform.org/xml/ns/gatein_resources_1_4 http://www.exoplatform.org/xml/ns/gatein_resources_1_4"
   xmlns="http://www.exoplatform.org/xml/ns/gatein_resources_1_4">
 
+  <portlet-skin>
+    <application-name>dlp</application-name>
+    <portlet-name>dlpQuarantine</portlet-name>
+    <skin-name>Enterprise</skin-name>
+    <css-path>/skin/css/dlp.css</css-path>
+  </portlet-skin>
+  <portlet>
+    <name>dlpQuarantine</name>
+    <module>
+      <script>
+        <minify>false</minify>
+        <path>/js/dlpQuarantine.bundle.js</path>
+      </script>
+      <depends>
+        <module>vue</module>
+      </depends>
+      <depends>
+        <module>eXoVueI18n</module>
+      </depends>
+      <depends>
+        <module>vuetify</module>
+      </depends>
+      <depends>
+        <module>commonVueComponents</module>
+      </depends>
+      <depends>
+        <module>extensionRegistry</module>
+      </depends>
+    </module>
+  </portlet>
+
 </gatein-resources>

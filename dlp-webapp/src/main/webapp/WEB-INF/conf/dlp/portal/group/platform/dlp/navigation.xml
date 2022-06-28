@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<node-navigation
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.exoplatform.org/xml/ns/gatein_objects_1_8 http://www.exoplatform.org/xml/ns/gatein_objects_1_8"
+          xmlns="http://www.exoplatform.org/xml/ns/gatein_objects_1_8">
+  <priority>3</priority>
+
+  <page-nodes>
+    <node>
+      <name>dlp-quarantine</name>
+      <label>#{administration.dlpQuarantine}</label>
+      <page-reference>group::/platform/dlp::dlp-quarantine</page-reference>
+    </node>
+  </page-nodes>
+</node-navigation>
