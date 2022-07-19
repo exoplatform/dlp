@@ -426,8 +426,12 @@ public class FileDlpConnector extends DlpServiceConnector {
     Session restoreSession = securityHomeNode.getSession();
     Node securityNode = (Node) restoreSession.getItem(securityNodePath);
     String restorePath = securityNode.getProperty(RESTORE_PATH).getString();
-
     restoreSession.getWorkspace().move(securityNodePath, restorePath);
+    // we set the EXO_LAST_MODIFIER to set the updater who validate the document in dlp administration.
+    if(securityNode.hasProperty(NodetypeConstant.EXO_LAST_MODIFIER)){
+      restoreSession.getNodeByUUID(securityNode.getUUID())
+                    .setProperty(NodetypeConstant.EXO_LAST_MODIFIER ,securityNode.getProperty(NodetypeConstant.EXO_LAST_MODIFIER).getString());
+    }
     removeRestorePathInfo(restoreSession, restorePath);
     securityHomeNode.save();
     restoreSession.save();
