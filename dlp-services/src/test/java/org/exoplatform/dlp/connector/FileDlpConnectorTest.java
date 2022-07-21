@@ -144,6 +144,8 @@ public class FileDlpConnectorTest {
     when(property.getString()).thenReturn("restorePath");
     when(item.getPath()).thenReturn("path");
     when(session.getItem("path")).thenReturn(item);
+    when(session.getNodeByUUID(item.getUUID())).thenReturn(item);
+    when(item.getProperty(NodetypeConstant.EXO_LAST_MODIFIER)).thenReturn(property);
     when(session.getWorkspace()).thenReturn(workspace);
     when(session.getItem("restorePath")).thenReturn(item);
 
