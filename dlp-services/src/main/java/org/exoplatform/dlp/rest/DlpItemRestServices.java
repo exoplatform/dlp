@@ -14,7 +14,12 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.exoplatform.common.http.HTTPStatus;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.exoplatform.dlp.dto.DlpPositiveItem;
 import org.exoplatform.dlp.processor.DlpOperationProcessor;
 import org.exoplatform.dlp.service.DlpPositiveItemService;
@@ -24,14 +29,8 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.rest.resource.ResourceContainer;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-
 @Path("/dlp/items")
-@Api(value = "/dlp/items", description = "Manages Dlp positive items") // NOSONAR
+@Tag(name = "/dlp/items", description = "Manages Dlp positive items") // NOSONAR
 public class DlpItemRestServices implements ResourceContainer {
 
   private static final Log       LOG = ExoLogger.getLogger(DlpItemRestServices.class);
@@ -48,14 +47,14 @@ public class DlpItemRestServices implements ResourceContainer {
   @GET
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("users")
-  @ApiOperation(value = "Retrieves the list of dlp positive items", httpMethod = "GET", response = Response.class, produces = "application/json", notes = "Return list of dlp positive items in json format")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-      @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-      @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error") })
-  public Response getDlpPositiveItems(@ApiParam(value = "Offset", required = false, defaultValue = "0")
+  @Operation(summary = "Retrieves the list of dlp positive items", method = "GET",  description = "Return list of dlp positive items in json format")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "50", description = "Internal server error") })
+  public Response getDlpPositiveItems(@Parameter(description = "Offset") @Schema(defaultValue = "0")
   @QueryParam("offset")
   int offset,
-                                      @ApiParam(value = "Limit", required = false, defaultValue = "20")
+                                      @Parameter(description = "Limit") @Schema(defaultValue = "20")
                                       @QueryParam("limit")
                                       int limit) {
     if (!DlpUtils.isDlpAdmin()) {
@@ -78,11 +77,11 @@ public class DlpItemRestServices implements ResourceContainer {
   @DELETE
   @Path("/item/{id}")
   @RolesAllowed("users")
-  @ApiOperation(value = "Delete a document by id", httpMethod = "DELETE", response = Response.class, notes = "This delete the document if the authenticated user is a super manager")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-      @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-      @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error") })
-  public Response deleteDlpDocumentById(@ApiParam(value = "Document id", required = true)
+  @Operation(summary = "Delete a document by id", method = "DELETE", description = "This delete the document if the authenticated user is a super manager")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+    public Response deleteDlpDocumentById(@Parameter(description = "Document id", required = true)
   @PathParam("id")
   Long id) {
     if (!DlpUtils.isDlpAdmin()) {
@@ -95,10 +94,10 @@ public class DlpItemRestServices implements ResourceContainer {
   @GET
   @Path("/keywords")
   @RolesAllowed("users")
-  @ApiOperation(value = "Retrieves the list of dlp keywords", httpMethod = "GET", response = Response.class, produces = "application/json", notes = "Return list of dlp keywords in json format")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-      @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-      @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error") })
+  @Operation(summary = "Retrieves the list of dlp keywords", method = "GET", description = "Return list of dlp keywords in json format")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
   public Response getDlpKeywords() {
     if (!DlpUtils.isDlpAdmin()) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -115,11 +114,11 @@ public class DlpItemRestServices implements ResourceContainer {
   @POST
   @Path("/keywords")
   @RolesAllowed("users")
-  @ApiOperation(value = "set dlp keywords", httpMethod = "POST", response = Response.class, produces = "application/json", notes = "set the dlp keywords")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-      @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-      @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error") })
-  public Response setDlpKeywords(@ApiParam(value = "keywords", required = true)
+  @Operation(summary = "set dlp keywords", method = "POST", description = "set the dlp keywords")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response setDlpKeywords(@Parameter(description = "keywords", required = true)
   String keywords) {
     if (!DlpUtils.isDlpAdmin()) {
       return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -137,11 +136,11 @@ public class DlpItemRestServices implements ResourceContainer {
   @Path("item/restore/{id}")
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed("users")
-  @ApiOperation(value = "Restore the dlp positive items", httpMethod = "PUT", response = Response.class, produces = "application/json", notes = "Return the restored positive item")
-  @ApiResponses(value = { @ApiResponse(code = HTTPStatus.OK, message = "Request fulfilled"),
-      @ApiResponse(code = HTTPStatus.UNAUTHORIZED, message = "Unauthorized operation"),
-      @ApiResponse(code = HTTPStatus.INTERNAL_ERROR, message = "Internal server error") })
-  public Response restoreDlpPositiveItems(@ApiParam(value = "Document id", required = true)
+  @Operation(summary = "Restore the dlp positive items", method = "PUT", description = "Return the restored positive item")
+  @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Request fulfilled"),
+      @ApiResponse(responseCode = "401", description = "Unauthorized operation"),
+      @ApiResponse(responseCode = "500", description = "Internal server error") })
+  public Response restoreDlpPositiveItems(@Parameter(description = "Document id", required = true)
   @PathParam("id")
   Long id) {
     if (!DlpUtils.isDlpAdmin()) {
