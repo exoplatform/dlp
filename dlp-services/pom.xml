@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.exoplatform.addons.dlp</groupId>
     <artifactId>dlp-parent</artifactId>
-    <version>1.0.x-SNAPSHOT</version>
+    <version>1.0.0-20221017</version>
   </parent>
   <artifactId>dlp-services</artifactId>
   <name>eXo Data Leak Prevention - Services</name>
