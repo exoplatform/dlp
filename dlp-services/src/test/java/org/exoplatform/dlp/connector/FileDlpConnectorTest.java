@@ -1,14 +1,15 @@
 package org.exoplatform.dlp.connector;
 
-import org.exoplatform.commons.api.search.data.SearchResult;
 import org.exoplatform.commons.search.index.IndexingService;
 import org.exoplatform.commons.utils.CommonsUtils;
+import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.PropertiesParam;
 import org.exoplatform.dlp.dto.RestoredDlpItem;
 import org.exoplatform.dlp.processor.DlpOperationProcessor;
 import org.exoplatform.dlp.service.DlpPositiveItemService;
 import org.exoplatform.dlp.service.RestoredDlpItemService;
+import org.exoplatform.ecms.legacy.search.data.SearchResult;
 import org.exoplatform.services.cms.documents.TrashService;
 import org.exoplatform.services.cms.impl.Utils;
 import org.exoplatform.services.cms.link.LinkManager;
@@ -19,14 +20,14 @@ import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.wcm.core.NodetypeConstant;
 import org.exoplatform.services.wcm.search.connector.FileSearchServiceConnector;
 import org.exoplatform.services.wcm.utils.WCMCoreUtils;
+
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedStatic;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.jcr.*;
 
@@ -36,10 +37,16 @@ import java.util.Map;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ WCMCoreUtils.class, CommonsUtils.class, Utils.class })
-@PowerMockIgnore({ "javax.management.*" })
+@RunWith(MockitoJUnitRunner.class)
 public class FileDlpConnectorTest {
+
+  private static final MockedStatic<ExoContainerContext> EXO_CONTAINER_CONTEXT = mockStatic(ExoContainerContext.class);
+
+  private static final MockedStatic<CommonsUtils>        COMMONS_UTILS         = mockStatic(CommonsUtils.class);
+
+  private static final MockedStatic<WCMCoreUtils>        WCM_CORE_UTILS        = mockStatic(WCMCoreUtils.class);
+
+  private static final MockedStatic<Utils>               UTILS                 = mockStatic(Utils.class);
 
   @Mock
   private RepositoryService          repositoryService;
@@ -64,6 +71,14 @@ public class FileDlpConnectorTest {
 
   private FileDlpConnector           fileDlpConnector;
 
+  @AfterClass
+  public static void afterRunBare() throws Exception { // NOSONAR
+    EXO_CONTAINER_CONTEXT.close();
+    COMMONS_UTILS.close();
+    WCM_CORE_UTILS.close();
+    UTILS.close();
+  }
+
   @Before
   public void setUp() throws Exception {
     InitParams params = new InitParams();
@@ -73,9 +88,6 @@ public class FileDlpConnectorTest {
     constructorParams.setProperty("enabled", "true");
     constructorParams.setProperty("displayName", "file");
     params.addParameter(constructorParams);
-    PowerMockito.mockStatic(WCMCoreUtils.class);
-    PowerMockito.mockStatic(CommonsUtils.class);
-    PowerMockito.mockStatic(Utils.class);
     fileDlpConnector = new FileDlpConnector(params,
                                             fileSearchServiceConnector,
                                             repositoryService,
@@ -92,7 +104,7 @@ public class FileDlpConnectorTest {
     when(repositoryService.getCurrentRepository()).thenReturn(repository);
     ExtendedSession session = mock(ExtendedSession.class);
     SessionProvider sessionProvider = mock(SessionProvider.class);
-    when(WCMCoreUtils.getSystemSessionProvider()).thenReturn(sessionProvider);
+    WCM_CORE_UTILS.when(() -> WCMCoreUtils.getSystemSessionProvider()).thenReturn(sessionProvider);
     when(sessionProvider.getSession("collaboration", repository)).thenReturn(session);
 
     Node item = mock(Node.class);
@@ -125,7 +137,7 @@ public class FileDlpConnectorTest {
     when(repositoryService.getCurrentRepository()).thenReturn(repository);
     ExtendedSession session = mock(ExtendedSession.class);
     SessionProvider sessionProvider = mock(SessionProvider.class);
-    when(WCMCoreUtils.getSystemSessionProvider()).thenReturn(sessionProvider);
+    WCM_CORE_UTILS.when(() -> WCMCoreUtils.getSystemSessionProvider()).thenReturn(sessionProvider);
     when(sessionProvider.getSession("collaboration", repository)).thenReturn(session);
 
     Node item = mock(Node.class);
@@ -144,13 +156,10 @@ public class FileDlpConnectorTest {
     when(property.getString()).thenReturn("restorePath");
     when(item.getPath()).thenReturn("path");
     when(session.getItem("path")).thenReturn(item);
-    when(session.getNodeByUUID(item.getUUID())).thenReturn(item);
-    when(item.getProperty(NodetypeConstant.EXO_LAST_MODIFIER)).thenReturn(property);
     when(session.getWorkspace()).thenReturn(workspace);
     when(session.getItem("restorePath")).thenReturn(item);
 
     when(item.getParent()).thenReturn(parent);
-    when(parent.getName()).thenReturn("parentName");
     when(parent.getNodes(item.getName())).thenReturn(nodeIterator);
     fileDlpConnector.restorePositiveItem("1");
 
@@ -167,7 +176,7 @@ public class FileDlpConnectorTest {
     when(repositoryService.getCurrentRepository()).thenReturn(repository);
     ExtendedSession session = mock(ExtendedSession.class);
     SessionProvider sessionProvider = mock(SessionProvider.class);
-    when(WCMCoreUtils.getSystemSessionProvider()).thenReturn(sessionProvider);
+    WCM_CORE_UTILS.when(() -> WCMCoreUtils.getSystemSessionProvider()).thenReturn(sessionProvider);
     when(sessionProvider.getSession("collaboration", repository)).thenReturn(session);
     Node item = mock(Node.class);
     Workspace workspace = mock(Workspace.class);
@@ -188,7 +197,7 @@ public class FileDlpConnectorTest {
     Node link = mock(Node.class);
     when(linkManager.getAllLinks(item, NodetypeConstant.EXO_SYMLINK, sessionProvider)).thenReturn(List.of(link));
     when(item.getPath()).thenReturn("/path");
-    when(CommonsUtils.getService(DlpPositiveItemService.class)).thenReturn(mock(DlpPositiveItemService.class));
+    COMMONS_UTILS.when(() -> CommonsUtils.getService(DlpPositiveItemService.class)).thenReturn(mock(DlpPositiveItemService.class));
     Property titleProperty = mock(Property.class);
     Property lastModifierProperty = mock(Property.class);
 
@@ -216,19 +225,17 @@ public class FileDlpConnectorTest {
     when(repositoryService.getCurrentRepository()).thenReturn(repository);
     ExtendedSession session = mock(ExtendedSession.class);
     SessionProvider sessionProvider = mock(SessionProvider.class);
-    when(WCMCoreUtils.getSystemSessionProvider()).thenReturn(sessionProvider);
+    WCM_CORE_UTILS.when(() -> WCMCoreUtils.getSystemSessionProvider()).thenReturn(sessionProvider);
     when(sessionProvider.getSession("collaboration", repository)).thenReturn(session);
     Node item = mock(Node.class);
     Node dlpQuarantineNode = mock(Node.class);
-    Workspace workspace = mock(Workspace.class);
 
-    when(session.getWorkspace()).thenReturn(workspace);
     when(session.getNodeByIdentifier("1")).thenReturn(item);
     when(session.getItem("/Quarantine")).thenReturn(dlpQuarantineNode);
 
     fileDlpConnector.removePositiveItem("1");
 
-    PowerMockito.verifyStatic(Utils.class, times(1));
+    UTILS.verify(() -> times(1));
     Utils.removeDeadSymlinks(item, false);
     verify(item, times(1)).remove();
     verify(dlpQuarantineNode, times(1)).save();
@@ -240,14 +247,13 @@ public class FileDlpConnectorTest {
     when(repositoryService.getCurrentRepository()).thenReturn(repository);
     ExtendedSession session = mock(ExtendedSession.class);
     SessionProvider sessionProvider = mock(SessionProvider.class);
-    when(WCMCoreUtils.getSystemSessionProvider()).thenReturn(sessionProvider);
+    WCM_CORE_UTILS.when(() -> WCMCoreUtils.getSystemSessionProvider()).thenReturn(sessionProvider);
     when(sessionProvider.getSession("collaboration", repository)).thenReturn(session);
     Node item = mock(Node.class);
     Workspace workspace = mock(Workspace.class);
-    when(session.getWorkspace()).thenReturn(workspace);
     when(session.getNodeByIdentifier("1")).thenReturn(item);
     when(item.getPath()).thenReturn("path");
-    when(WCMCoreUtils.getLinkInDocumentsApplication(item.getPath())).thenReturn("/url/path");
+    WCM_CORE_UTILS.when(() -> WCMCoreUtils.getLinkInDocumentsApplication(item.getPath())).thenReturn("/url/path");
     assertEquals("/url/path", fileDlpConnector.getItemUrl("1"));
   }
 }
