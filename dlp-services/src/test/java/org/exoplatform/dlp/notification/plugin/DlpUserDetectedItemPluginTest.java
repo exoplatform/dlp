@@ -1,9 +1,20 @@
 package org.exoplatform.dlp.notification.plugin;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.when;
+
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.junit.MockitoJUnitRunner;
+
 import org.exoplatform.commons.api.notification.NotificationContext;
 import org.exoplatform.commons.api.notification.model.ArgumentLiteral;
 import org.exoplatform.commons.api.notification.model.NotificationInfo;
-import org.exoplatform.commons.api.notification.model.PluginKey;
 import org.exoplatform.commons.notification.impl.NotificationContextImpl;
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.ExoContainerContext;
@@ -11,22 +22,13 @@ import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.dlp.dto.DlpPositiveItem;
 import org.exoplatform.dlp.service.DlpPositiveItemService;
 import org.exoplatform.services.idgenerator.IDGeneratorService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
-
-@RunWith(PowerMockRunner.class)
-@PowerMockIgnore({ "javax.management.*" })
-@PrepareForTest({ CommonsUtils.class, PluginKey.class, CommonsUtils.class, ExoContainerContext.class })
+@RunWith(MockitoJUnitRunner.class)
 public class DlpUserDetectedItemPluginTest {
+
+  private static final MockedStatic<ExoContainerContext> EXO_CONTAINER_CONTEXT = mockStatic(ExoContainerContext.class);
+
+  private static final MockedStatic<CommonsUtils>        COMMONS_UTILS         = mockStatic(CommonsUtils.class);
 
   @Mock
   private DlpPositiveItemService    dlpPositiveItemService;
@@ -36,12 +38,16 @@ public class DlpUserDetectedItemPluginTest {
 
   private DlpUserDetectedItemPlugin dlpUserDetectedItemPlugin;
 
+  @AfterClass
+  public static void afterRunBare() throws Exception { // NOSONAR
+    EXO_CONTAINER_CONTEXT.close();
+    COMMONS_UTILS.close();
+  }
+
   @Before
   public void setUp() throws Exception {
     this.dlpUserDetectedItemPlugin = new DlpUserDetectedItemPlugin(initParams, dlpPositiveItemService);
-    PowerMockito.mockStatic(CommonsUtils.class);
-    PowerMockito.mockStatic(ExoContainerContext.class);
-    when(ExoContainerContext.getService(IDGeneratorService.class)).thenReturn(null);
+    EXO_CONTAINER_CONTEXT.when(() -> ExoContainerContext.getService(IDGeneratorService.class)).thenReturn(null);
   }
 
   @Test

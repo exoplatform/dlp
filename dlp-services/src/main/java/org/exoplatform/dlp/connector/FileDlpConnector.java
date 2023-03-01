@@ -22,8 +22,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
-import org.exoplatform.commons.api.search.data.SearchContext;
-import org.exoplatform.commons.api.search.data.SearchResult;
 import org.exoplatform.commons.search.index.IndexingService;
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.xml.InitParams;
@@ -33,6 +31,8 @@ import org.exoplatform.dlp.dto.RestoredDlpItem;
 import org.exoplatform.dlp.processor.DlpOperationProcessor;
 import org.exoplatform.dlp.service.DlpPositiveItemService;
 import org.exoplatform.dlp.service.RestoredDlpItemService;
+import org.exoplatform.ecms.legacy.search.data.SearchContext;
+import org.exoplatform.ecms.legacy.search.data.SearchResult;
 import org.exoplatform.services.cms.documents.TrashService;
 import org.exoplatform.services.cms.impl.Utils;
 import org.exoplatform.services.cms.link.LinkManager;
