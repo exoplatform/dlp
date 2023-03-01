@@ -1,33 +1,39 @@
 package org.exoplatform.dlp.rest;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.ws.rs.core.Response;
+
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.junit.MockitoJUnitRunner;
+
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.dlp.dto.DlpPositiveItem;
 import org.exoplatform.dlp.processor.DlpOperationProcessor;
 import org.exoplatform.dlp.service.DlpPositiveItemService;
 import org.exoplatform.dlp.utils.DlpUtils;
 import org.exoplatform.portal.config.UserACL;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-import javax.ws.rs.core.Response;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.*;
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ DlpUtils.class, CommonsUtils.class})
+@RunWith(MockitoJUnitRunner.class)
 public class DlpItemRestServicesTest {
+
+  private static final MockedStatic<DlpUtils>     DLP_UTILS     = mockStatic(DlpUtils.class);
+
+  private static final MockedStatic<CommonsUtils> COMMONS_UTILS = mockStatic(CommonsUtils.class);
 
   @Mock
   private DlpPositiveItemService dlpPositiveItemService;
@@ -42,14 +48,18 @@ public class DlpItemRestServicesTest {
 
   private static final String    DLP_GROUP = "/platform/dlp";
 
+  @AfterClass
+  public static void afterRunBare() throws Exception { // NOSONAR
+    DLP_UTILS.close();
+    COMMONS_UTILS.close();
+  }
+
   @Before
   public void setUp() {
     this.dlpItemRestServices = new DlpItemRestServices(dlpPositiveItemService, dlpOperationProcessor);
-    PowerMockito.mockStatic(DlpUtils.class);
-    PowerMockito.mockStatic(CommonsUtils.class);
-    when(CommonsUtils.getService(UserACL.class)).thenReturn(userACL);
+
+    COMMONS_UTILS.when(() -> CommonsUtils.getService(UserACL.class)).thenReturn(userACL);
     when(userACL.isUserInGroup(DLP_GROUP)).thenReturn(true);
-    when(userACL.isSuperUser()).thenReturn(true);
   }
 
   @Test
@@ -60,10 +70,10 @@ public class DlpItemRestServicesTest {
     dlpPositiveItem.setKeywords("test");
     dlpPositiveItem.setTitle("title");
     dlpPositiveItems.add(dlpPositiveItem);
-    when(DlpUtils.isDlpAdmin()).thenReturn(false);
+    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenReturn(false);
     Response response = dlpItemRestServices.getDlpPositiveItems(0, 10);
     assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
-    doCallRealMethod().when(DlpUtils.class, "isDlpAdmin");
+    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenCallRealMethod();
     when(dlpPositiveItemService.getDlpPositivesItems(anyInt(), anyInt())).thenReturn(dlpPositiveItems);
     when(dlpPositiveItemService.getDlpPositiveItemsCount()).thenReturn((long) dlpPositiveItems.size());
     Response response1 = dlpItemRestServices.getDlpPositiveItems(0, 10);
@@ -76,10 +86,10 @@ public class DlpItemRestServicesTest {
 
   @Test
   public void deleteDlpDocumentById() throws Exception {
-    when(DlpUtils.isDlpAdmin()).thenReturn(false);
+    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenReturn(false);
     Response response = dlpItemRestServices.deleteDlpDocumentById(1L);
     assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
-    doCallRealMethod().when(DlpUtils.class, "isDlpAdmin");
+    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenCallRealMethod();
     Response response1 = dlpItemRestServices.deleteDlpDocumentById(1L);
     verify(dlpPositiveItemService, times(1)).deleteDlpPositiveItem(1L);
     assertEquals(Response.Status.OK.getStatusCode(), response1.getStatus());
@@ -88,10 +98,10 @@ public class DlpItemRestServicesTest {
   @Test
   public void getDlpKeywords() throws Exception {
     String keywords = "test, anything";
-    when(DlpUtils.isDlpAdmin()).thenReturn(false);
+    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenReturn(false);
     Response response = dlpItemRestServices.getDlpKeywords();
     assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
-    doCallRealMethod().when(DlpUtils.class, "isDlpAdmin");
+    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenCallRealMethod();
     when(dlpOperationProcessor.getKeywords()).thenReturn(keywords);
     Response response1 = dlpItemRestServices.getDlpKeywords();
     assertEquals(Response.Status.OK.getStatusCode(), response1.getStatus());
@@ -103,10 +113,10 @@ public class DlpItemRestServicesTest {
   @Test
   public void setDlpKeywords() throws Exception {
     String keywords = "test, anything";
-    when(DlpUtils.isDlpAdmin()).thenReturn(false);
+    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenReturn(false);
     Response response = dlpItemRestServices.setDlpKeywords(keywords);
     assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
-    doCallRealMethod().when(DlpUtils.class, "isDlpAdmin");
+    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenCallRealMethod();
     Response response1 = dlpItemRestServices.setDlpKeywords(keywords);
     verify(dlpOperationProcessor, times(1)).setKeywords(keywords);;
     assertEquals(Response.Status.OK.getStatusCode(), response1.getStatus());
@@ -117,10 +127,10 @@ public class DlpItemRestServicesTest {
 
   @Test
   public void restoreDlpPositiveItems() throws Exception {
-    when(DlpUtils.isDlpAdmin()).thenReturn(false);
+    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenReturn(false);
     Response response = dlpItemRestServices.restoreDlpPositiveItems(1L);
     assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
-    doCallRealMethod().when(DlpUtils.class, "isDlpAdmin");
+    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenCallRealMethod();
     Response response1 = dlpItemRestServices.restoreDlpPositiveItems(1L);
     verify(dlpPositiveItemService, times(1)).restoreDlpPositiveItem(1L);;
     assertEquals(Response.Status.OK.getStatusCode(), response1.getStatus());

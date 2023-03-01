@@ -4,24 +4,29 @@ import org.exoplatform.commons.api.settings.ExoFeatureService;
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.dlp.utils.DlpUtils;
 import org.exoplatform.portal.config.UserACL;
+
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedStatic;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.ws.rs.core.Response;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ DlpUtils.class, CommonsUtils.class })
+@RunWith(MockitoJUnitRunner.class)
 public class DlpRestServicesTest {
+
+  private static final MockedStatic<DlpUtils>     DLP_UTILS     = mockStatic(DlpUtils.class);
+
+  private static final MockedStatic<CommonsUtils> COMMONS_UTILS = mockStatic(CommonsUtils.class);
 
   private DlpRestServices     dlpRestServices;
 
@@ -30,25 +35,28 @@ public class DlpRestServicesTest {
 
   private static final String DLP_GROUP = "/platform/dlp";
 
+  @AfterClass
+  public static void afterRunBare() throws Exception { // NOSONAR
+    DLP_UTILS.close();
+    COMMONS_UTILS.close();
+  }
+
   @Before
   public void setUp() {
     dlpRestServices = new DlpRestServices();
-    PowerMockito.mockStatic(DlpUtils.class);
-    PowerMockito.mockStatic(CommonsUtils.class);
-    when(CommonsUtils.getService(UserACL.class)).thenReturn(userACL);
-    when(userACL.isUserInGroup(DLP_GROUP)).thenReturn(true);
-    when(userACL.isSuperUser()).thenReturn(true);
 
+    COMMONS_UTILS.when(() -> CommonsUtils.getService(UserACL.class)).thenReturn(userACL);
+    when(userACL.isUserInGroup(DLP_GROUP)).thenReturn(true);
   }
 
   @Test
   public void changeFeatureActivation() throws Exception {
     ExoFeatureService exoFeatureService = mock(ExoFeatureService.class);
-    when(CommonsUtils.getService(ExoFeatureService.class)).thenReturn(exoFeatureService);
-    when(DlpUtils.isDlpAdmin()).thenReturn(false);
+    COMMONS_UTILS.when(() -> CommonsUtils.getService(ExoFeatureService.class)).thenReturn(exoFeatureService);
+    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenReturn(false);
     Response response = dlpRestServices.changeFeatureActivation("false");
     assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
-    doCallRealMethod().when(DlpUtils.class, "isDlpAdmin");
+    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenCallRealMethod();
     Response response1 = dlpRestServices.changeFeatureActivation("true");
     verify(exoFeatureService, times(1)).saveActiveFeature("dlp", true);
     assertEquals(Response.Status.OK.getStatusCode(), response1.getStatus());

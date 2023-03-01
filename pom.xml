@@ -28,7 +28,6 @@
     <!-- 3rd party libraries versions -->
     <org.exoplatform.social.version>6.5.x-mips-SNAPSHOT</org.exoplatform.social.version>
     <addon.exo.ecms.version>6.5.x-mips-SNAPSHOT</addon.exo.ecms.version>
-    <org.exoplatform.commons.version>6.5.x-mips-SNAPSHOT</org.exoplatform.commons.version>
     <org.exoplatform.platform-ui.version>6.5.x-mips-SNAPSHOT</org.exoplatform.platform-ui.version>
 
     <!-- Sonar properties -->
@@ -48,13 +47,6 @@
         <groupId>org.exoplatform.ecms</groupId>
         <artifactId>ecms</artifactId>
         <version>${addon.exo.ecms.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.exoplatform.commons</groupId>
-        <artifactId>commons</artifactId>
-        <version>${org.exoplatform.commons.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
