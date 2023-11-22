@@ -34,7 +34,7 @@
         <node>
           <name>quarantine</name>
           <label>#{portal.administration.quarantine}</label>
-          <icon>fas fa-shield-virus</icon>
+          <icon>fas fa-dungeon</icon>
           <page-reference>portal::administration::dlp-quarantine</page-reference>
         </node>
       </node>
