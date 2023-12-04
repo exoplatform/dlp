@@ -52,7 +52,7 @@ export default {
       return '';
     },
     documentName() {
-      return `{${this.notification.parameters?.itemTitle}}`;
+      return this.notification?.parameters?.itemTitle;
     },
     icon() {
       return this.notification?.plugin === 'DlpUserRestoredItemPlugin' ? 'fa-folder' : 'fa-folder-open';
