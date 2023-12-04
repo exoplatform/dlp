@@ -17,12 +17,13 @@
 
 extensionRegistry.registerExtension('WebNotification', 'notification-group-extension', {
   rank: 40,
-  name: 'dlp',
+  name: 'quarantine',
   plugins: [
     'DlpAdminDetectedItemPlugin',
     'DlpUserDetectedItemPlugin',
     'DlpUserRestoredItemPlugin'
   ],
+  icon: 'fas fa-shield-alt'
 });
 
 extensionRegistry.registerExtension('WebNotification', 'notification-content-extension', {
