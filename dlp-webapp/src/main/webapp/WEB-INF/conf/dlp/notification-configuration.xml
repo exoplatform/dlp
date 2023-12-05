@@ -65,6 +65,9 @@
             <field name="bundlePath">
               <string>locale.notification.template.Notification</string>
             </field>
+            <field name="mutable">
+              <boolean>false</boolean>
+            </field>
           </object>
         </object-param>
       </init-params>
@@ -101,6 +104,9 @@
             </field>
             <field name="bundlePath">
               <string>locale.notification.template.Notification</string>
+            </field>
+            <field name="mutable">
+              <boolean>false</boolean>
             </field>
           </object>
         </object-param>
@@ -139,6 +145,9 @@
             <field name="bundlePath">
               <string>locale.notification.template.Notification</string>
             </field>
+            <field name="mutable">
+              <boolean>false</boolean>
+            </field>
           </object>
         </object-param>
       </init-params>
@@ -172,17 +181,6 @@
         <value-param>
           <name>channel-id</name>
           <value>MAIL_CHANNEL</value>
-        </value-param>
-      </init-params>
-    </component-plugin>
-    <component-plugin profiles="all">
-      <name>web.channel.dlp.template</name>
-      <set-method>registerTemplateProvider</set-method>
-      <type>org.exoplatform.dlp.notification.channel.template.WebTemplateProvider</type>
-      <init-params>
-        <value-param>
-          <name>channel-id</name>
-          <value>WEB_CHANNEL</value>
         </value-param>
       </init-params>
     </component-plugin>
