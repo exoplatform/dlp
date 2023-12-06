@@ -34,6 +34,7 @@ const config = {
   ],
   entry: {
     dlpQuarantine: './src/main/webapp/vue-app/dlp-quarantine/main.js',
+    dlpNotificationExtension: './src/main/webapp/vue-app/dlp-notifications/main.js'
   },
   output: {
     path: path.join(__dirname, 'target/dlp/'),

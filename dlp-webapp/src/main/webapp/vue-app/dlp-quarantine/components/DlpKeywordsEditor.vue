@@ -63,11 +63,6 @@
               </v-chip>
             </v-chip-group>
           </v-card-text>
-          <v-card-text v-if="error">
-            <v-alert type="error">
-              {{ error }} 
-            </v-alert>
-          </v-card-text>
         </v-card>
       </template>
       <template slot="footer">
@@ -99,14 +94,8 @@ export default {
       keywords: [],
       modifyingKeywords: [],
       keywordTextLength: 100,
-      showEditBtn: false, 
-      error: null,
+      showEditBtn: false
     };
-  },
-  watch: {
-    modifyingKeywords() {
-      this.error = null;
-    },
   },
   created() {
     this.getDlpKeywords();
@@ -127,15 +116,9 @@ export default {
         const words = input.trim().split(/\s+/);
         const num_words = words.length;
         if (num_words>3){
-          this.error = this.$t('items.dlp.editKeyword.maxWordsAllowed');
-          window.setTimeout(() => {
-            this.error = null;
-          }, 5000);
+          this.displayMessage({message: this.$t('items.dlp.editKeyword.maxWordsAllowed'), type: 'error'});
         } else if (index > -1) {
-          this.error = this.$t('items.dlp.editKeyword.alreadyAdded');
-          window.setTimeout(() => {
-            this.error = null;
-          }, 5000);
+          this.displayMessage({message: this.$t('items.dlp.editKeyword.alreadyAdded'), type: 'error'});
         } else {
           this.modifyingKeywords.push(this.$refs.InputKeyword.value.trim());
           this.$refs.InputKeyword.value = '';
@@ -162,6 +145,9 @@ export default {
     },
     CleanInput() {
       this.$refs.InputKeyword.value = '';
+    },
+    displayMessage(message) {
+      this.$root.$emit('alert-message', message?.message, message?.type || 'success');
     }
   }
 };
