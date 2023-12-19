@@ -1,9 +1,9 @@
 <template>
   <v-app id="dlpQuarantine">
-    <v-card class="my-4 mx-2" flat>
-      <v-list>
-        <v-list-item>
-          <v-list-item-content>
+    <v-card class="pa-5 card-border-radius" flat>
+      <v-list class="pa-0">
+        <v-list-item class="pa-0">
+          <v-list-item-content class="pa-0">
             <v-list-item-title class="title mb-0">
               <v-row no-gutters class="col-4">
                 <v-col class="col-3 pb-0 pt-5">
@@ -24,7 +24,7 @@
           </v-list-item-content>
         </v-list-item>
         <dlp-keywords-editor />
-        <v-divider class="mx-5" />
+        <v-divider />
       </v-list>
       <exo-confirm-dialog
         ref="restoreConfirmDialog"
@@ -47,7 +47,7 @@
         :options.sync="options"
         :server-items-length="totalSize"
         :footer-props="{ itemsPerPageOptions }"
-        class="px-5 data-table-light-border">
+        class="data-table-light-border">
         <template slot="item.detectionDate" slot-scope="{ item }">
           <div class="d-flex justify-center">
             <date-format
