@@ -16,8 +16,8 @@
 -->
 <template>
   <user-notification-template
-      :notification="notification"
-      :message="message">
+    :notification="notification"
+    :message="message">
     <template #avatar>
       <div>
         <v-icon size="34">fas fa-shield-alt</v-icon>
