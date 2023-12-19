@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-card-text>
+    <v-card-text class="px-0 py-5">
       <div>
         <v-chip-group
           active-class="primary--text"
