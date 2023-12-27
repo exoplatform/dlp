@@ -1,6 +1,6 @@
 package org.exoplatform.dlp.queue.impl;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import org.exoplatform.dlp.dao.DlpOperationDAO;
 import org.exoplatform.dlp.domain.DlpOperation;

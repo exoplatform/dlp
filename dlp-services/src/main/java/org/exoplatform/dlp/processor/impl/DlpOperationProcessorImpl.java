@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.picocontainer.Startable;
 
 import org.exoplatform.commons.api.settings.SettingService;
