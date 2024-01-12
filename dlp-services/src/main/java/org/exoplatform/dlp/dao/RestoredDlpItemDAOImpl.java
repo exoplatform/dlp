@@ -1,7 +1,7 @@
 package org.exoplatform.dlp.dao;
 
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 
 import org.exoplatform.commons.persistence.impl.GenericDAOJPAImpl;
 import org.exoplatform.dlp.domain.RestoredDlpItemEntity;
