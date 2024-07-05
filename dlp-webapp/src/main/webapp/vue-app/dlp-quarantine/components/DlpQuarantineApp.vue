@@ -1,45 +1,29 @@
 <template>
   <v-app id="dlpQuarantine">
-    <v-card class="pa-5 card-border-radius" flat>
-      <v-list class="pa-0">
-        <v-list-item class="pa-0">
-          <v-list-item-content class="pa-0">
-            <v-list-item-title class="title mb-0">
-              <v-row no-gutters class="col-4">
-                <v-col class="col-3 pb-0 pt-5">
-                  <h4 class="font-weight-bold ma-0">{{ $t('items.dlp.quarantine.label') }}</h4>
-                </v-col>
-                <v-col class="col-1">
-                  <v-switch
-                    v-if="dlpFeatureStatusLoaded"
-                    v-model="dlpFeatureEnabled"
-                    dense
-                    @change="saveDlpFeatureStatus(dlpFeatureEnabled)" />
-                </v-col>
-              </v-row>
-            </v-list-item-title>
-            <v-list-item-subtitle class="text-sub-title font-italic">
-              {{ $t('items.dlp.quarantine.enableDisable') }}
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-        <dlp-keywords-editor />
-        <v-divider />
-      </v-list>
-      <exo-confirm-dialog
-        ref="restoreConfirmDialog"
-        :message="restoreConfirmMessage"
-        :title="$t('items.dlp.title.confirmRestore')"
-        :ok-label="$t('items.dlp.button.ok')"
-        :cancel-label="$t('items.dlp.button.cancel')"
-        @ok="restoreDlpPositiveItemConfirm()" />
-      <exo-confirm-dialog
-        ref="deleteConfirmDialog"
-        :message="deleteConfirmMessage"
-        :title="$t('items.dlp.title.confirmDelete')"
-        :ok-label="$t('items.dlp.button.ok')"
-        :cancel-label="$t('items.dlp.button.cancel')"
-        @ok="deleteDlpPositiveItemConfirm()" />
+    <v-card class="application-body pa-5" flat>
+      <div class="width-min-content">
+        <v-list class="pa-0">
+          <v-list-item class="pa-0">
+            <v-list-item-content class="pa-0">
+              <v-list-item-title class="text-title mb-0">
+                {{ $t('items.dlp.quarantine.label') }}
+              </v-list-item-title>
+              <v-list-item-subtitle class="text-subtitle">
+                {{ $t('items.dlp.quarantine.enableDisable') }}
+              </v-list-item-subtitle>
+            </v-list-item-content>
+            <v-list-item-action class="ms-4 mb-auto mt-2">
+              <v-switch
+                v-if="dlpFeatureStatusLoaded"
+                v-model="dlpFeatureEnabled"
+                dense
+                @change="saveDlpFeatureStatus(dlpFeatureEnabled)" />
+            </v-list-item-action>
+          </v-list-item>
+        </v-list>
+      </div>
+      <dlp-keywords-editor />
+      <v-divider />
       <v-data-table
         :headers="headers"
         :items="items"
@@ -97,6 +81,20 @@
         </template>
       </v-data-table>
     </v-card>
+    <exo-confirm-dialog
+      ref="restoreConfirmDialog"
+      :message="restoreConfirmMessage"
+      :title="$t('items.dlp.title.confirmRestore')"
+      :ok-label="$t('items.dlp.button.ok')"
+      :cancel-label="$t('items.dlp.button.cancel')"
+      @ok="restoreDlpPositiveItemConfirm()" />
+    <exo-confirm-dialog
+      ref="deleteConfirmDialog"
+      :message="deleteConfirmMessage"
+      :title="$t('items.dlp.title.confirmDelete')"
+      :ok-label="$t('items.dlp.button.ok')"
+      :cancel-label="$t('items.dlp.button.cancel')"
+      @ok="deleteDlpPositiveItemConfirm()" />
   </v-app>
 </template>
 
