@@ -47,7 +47,16 @@
     <key>org.exoplatform.dlp.dao.RestoredDlpItemDAO</key>
     <type>org.exoplatform.dlp.dao.RestoredDlpItemDAOImpl</type>
   </component>
-  
+
+  <component>
+    <type>org.exoplatform.dlp.notification.pwa.DlpAdminDetectedItemPwaPlugin</type>
+  </component>
+  <component>
+    <type>org.exoplatform.dlp.notification.pwa.DlpUserDetectedItemPwaPlugin</type>
+  </component>
+  <component>
+    <type>org.exoplatform.dlp.notification.pwa.DlpUserRestoredItemPwaPlugin</type>
+  </component>
   <external-component-plugins>
     <target-component>org.exoplatform.services.scheduler.JobSchedulerService</target-component>
     <component-plugin>
