@@ -6,6 +6,8 @@ import org.exoplatform.container.PortalContainer;
 import org.exoplatform.dlp.connector.DlpServiceConnector;
 import org.exoplatform.dlp.processor.DlpOperationProcessor;
 import org.exoplatform.portal.config.UserACL;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 
 public class DlpUtils {
   
@@ -70,6 +72,11 @@ public class DlpUtils {
   
   public static boolean isDlpAdmin() {
     UserACL userACL = CommonsUtils.getService(UserACL.class);
-    return userACL.isSuperUser() || userACL.isUserInGroup(DLP_GROUP);
+    return userACL.isSuperUser(getCurrentIdentity()) || userACL.isUserInGroup(getCurrentIdentity(), DLP_GROUP);
+  }
+
+  private static Identity getCurrentIdentity() {
+    ConversationState conversationState = ConversationState.getCurrent();
+    return conversationState == null ? null : conversationState.getIdentity();
   }
 }
