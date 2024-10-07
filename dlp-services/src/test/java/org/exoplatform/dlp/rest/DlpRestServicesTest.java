@@ -19,7 +19,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DlpRestServicesTest {
@@ -33,10 +32,8 @@ public class DlpRestServicesTest {
   @Mock
   private UserACL             userACL;
 
-  private static final String DLP_GROUP = "/platform/dlp";
-
   @AfterClass
-  public static void afterRunBare() throws Exception { // NOSONAR
+  public static void afterRunBare() {
     DLP_UTILS.close();
     COMMONS_UTILS.close();
   }
@@ -46,20 +43,19 @@ public class DlpRestServicesTest {
     dlpRestServices = new DlpRestServices();
 
     COMMONS_UTILS.when(() -> CommonsUtils.getService(UserACL.class)).thenReturn(userACL);
-    when(userACL.isUserInGroup(DLP_GROUP)).thenReturn(true);
   }
 
   @Test
-  public void changeFeatureActivation() throws Exception {
+  public void changeFeatureActivation() {
     ExoFeatureService exoFeatureService = mock(ExoFeatureService.class);
     COMMONS_UTILS.when(() -> CommonsUtils.getService(ExoFeatureService.class)).thenReturn(exoFeatureService);
-    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenReturn(false);
+    DLP_UTILS.when(DlpUtils::isDlpAdmin).thenReturn(false);
     Response response = dlpRestServices.changeFeatureActivation("false");
     assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
-    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenCallRealMethod();
+    DLP_UTILS.when(DlpUtils::isDlpAdmin).thenReturn(true);
     Response response1 = dlpRestServices.changeFeatureActivation("true");
-    verify(exoFeatureService, times(1)).saveActiveFeature("dlp", true);
     assertEquals(Response.Status.OK.getStatusCode(), response1.getStatus());
+    verify(exoFeatureService, times(1)).saveActiveFeature("dlp", true);
     doThrow(new RuntimeException()).when(exoFeatureService).saveActiveFeature("dlp", true);
     Response response2 = dlpRestServices.changeFeatureActivation("true");
     assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response2.getStatus());

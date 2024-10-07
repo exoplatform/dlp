@@ -1,7 +1,9 @@
 package org.exoplatform.dlp.rest;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
@@ -28,6 +30,8 @@ import org.exoplatform.dlp.service.DlpPositiveItemService;
 import org.exoplatform.dlp.utils.DlpUtils;
 import org.exoplatform.portal.config.UserACL;
 
+import lombok.SneakyThrows;
+
 @RunWith(MockitoJUnitRunner.class)
 public class DlpItemRestServicesTest {
 
@@ -49,7 +53,7 @@ public class DlpItemRestServicesTest {
   private static final String    DLP_GROUP = "/platform/dlp";
 
   @AfterClass
-  public static void afterRunBare() throws Exception { // NOSONAR
+  public static void afterRunBare() {
     DLP_UTILS.close();
     COMMONS_UTILS.close();
   }
@@ -57,23 +61,26 @@ public class DlpItemRestServicesTest {
   @Before
   public void setUp() {
     this.dlpItemRestServices = new DlpItemRestServices(dlpPositiveItemService, dlpOperationProcessor);
+    COMMONS_UTILS.reset();
+    DLP_UTILS.reset();
 
     COMMONS_UTILS.when(() -> CommonsUtils.getService(UserACL.class)).thenReturn(userACL);
-    when(userACL.isUserInGroup(DLP_GROUP)).thenReturn(true);
+    when(userACL.isUserInGroup(any(), eq(DLP_GROUP))).thenReturn(true);
   }
 
   @Test
-  public void getDlpPositiveItems() throws Exception {
+  @SneakyThrows
+  public void getDlpPositiveItems() {
     List<DlpPositiveItem> dlpPositiveItems = new ArrayList<>();
     DlpPositiveItem dlpPositiveItem = new DlpPositiveItem();
     dlpPositiveItem.setId(1L);
     dlpPositiveItem.setKeywords("test");
     dlpPositiveItem.setTitle("title");
     dlpPositiveItems.add(dlpPositiveItem);
-    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenReturn(false);
+    DLP_UTILS.when(DlpUtils::isDlpAdmin).thenReturn(false);
     Response response = dlpItemRestServices.getDlpPositiveItems(0, 10);
     assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
-    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenCallRealMethod();
+    DLP_UTILS.when(DlpUtils::isDlpAdmin).thenCallRealMethod();
     when(dlpPositiveItemService.getDlpPositivesItems(anyInt(), anyInt())).thenReturn(dlpPositiveItems);
     when(dlpPositiveItemService.getDlpPositiveItemsCount()).thenReturn((long) dlpPositiveItems.size());
     Response response1 = dlpItemRestServices.getDlpPositiveItems(0, 10);
@@ -81,27 +88,26 @@ public class DlpItemRestServicesTest {
     doThrow(new RuntimeException()).when(dlpPositiveItemService).getDlpPositivesItems(anyInt(), anyInt());
     Response response2 = dlpItemRestServices.getDlpPositiveItems(0, 10);
     assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response2.getStatus());
-
   }
 
   @Test
-  public void deleteDlpDocumentById() throws Exception {
-    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenReturn(false);
+  public void deleteDlpDocumentById() {
+    DLP_UTILS.when(DlpUtils::isDlpAdmin).thenReturn(false);
     Response response = dlpItemRestServices.deleteDlpDocumentById(1L);
     assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
-    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenCallRealMethod();
+    DLP_UTILS.when(DlpUtils::isDlpAdmin).thenCallRealMethod();
     Response response1 = dlpItemRestServices.deleteDlpDocumentById(1L);
     verify(dlpPositiveItemService, times(1)).deleteDlpPositiveItem(1L);
     assertEquals(Response.Status.OK.getStatusCode(), response1.getStatus());
   }
 
   @Test
-  public void getDlpKeywords() throws Exception {
+  public void getDlpKeywords() {
     String keywords = "test, anything";
-    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenReturn(false);
+    DLP_UTILS.when(DlpUtils::isDlpAdmin).thenReturn(false);
     Response response = dlpItemRestServices.getDlpKeywords();
     assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
-    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenCallRealMethod();
+    DLP_UTILS.when(DlpUtils::isDlpAdmin).thenCallRealMethod();
     when(dlpOperationProcessor.getKeywords()).thenReturn(keywords);
     Response response1 = dlpItemRestServices.getDlpKeywords();
     assertEquals(Response.Status.OK.getStatusCode(), response1.getStatus());
@@ -111,14 +117,14 @@ public class DlpItemRestServicesTest {
   }
 
   @Test
-  public void setDlpKeywords() throws Exception {
+  public void setDlpKeywords() {
     String keywords = "test, anything";
-    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenReturn(false);
+    DLP_UTILS.when(DlpUtils::isDlpAdmin).thenReturn(false);
     Response response = dlpItemRestServices.setDlpKeywords(keywords);
     assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
-    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenCallRealMethod();
+    DLP_UTILS.when(DlpUtils::isDlpAdmin).thenCallRealMethod();
     Response response1 = dlpItemRestServices.setDlpKeywords(keywords);
-    verify(dlpOperationProcessor, times(1)).setKeywords(keywords);;
+    verify(dlpOperationProcessor, times(1)).setKeywords(keywords);
     assertEquals(Response.Status.OK.getStatusCode(), response1.getStatus());
     doThrow(new RuntimeException()).when(dlpOperationProcessor).setKeywords(keywords);
     Response response2 = dlpItemRestServices.setDlpKeywords(keywords);
@@ -126,16 +132,17 @@ public class DlpItemRestServicesTest {
   }
 
   @Test
-  public void restoreDlpPositiveItems() throws Exception {
-    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenReturn(false);
+  public void restoreDlpPositiveItems() {
+    DLP_UTILS.when(DlpUtils::isDlpAdmin).thenReturn(false);
     Response response = dlpItemRestServices.restoreDlpPositiveItems(1L);
     assertEquals(Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
-    DLP_UTILS.when(() -> DlpUtils.isDlpAdmin()).thenCallRealMethod();
+    DLP_UTILS.when(DlpUtils::isDlpAdmin).thenCallRealMethod();
     Response response1 = dlpItemRestServices.restoreDlpPositiveItems(1L);
-    verify(dlpPositiveItemService, times(1)).restoreDlpPositiveItem(1L);;
+    verify(dlpPositiveItemService, times(1)).restoreDlpPositiveItem(1L);
     assertEquals(Response.Status.OK.getStatusCode(), response1.getStatus());
     doThrow(new RuntimeException()).when(dlpPositiveItemService).restoreDlpPositiveItem(1L);
     Response response2 = dlpItemRestServices.restoreDlpPositiveItems(1L);
     assertEquals(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), response2.getStatus());
   }
+
 }
