@@ -99,13 +99,14 @@
   </changeSet>
   
   <changeSet author="exo-dlp" id="1.0.0-8">
+    <validCheckSum>9:29316e6ea1f11ab12eb204c8a4bc817c</validCheckSum>
     <modifyDataType columnName="KEYWORDS"
-                    newDataType="NVARCHAR(500)"
+                    newDataType="VARCHAR(500)"
                     tableName="DLP_POSITIVE_ITEMS"/>
     <rollback>
       <!-- This rollback is need because in unit test we will revert all changes after each test case-->
       <modifyDataType columnName="KEYWORDS"
-                      newDataType="NVARCHAR(50)"
+                      newDataType="VARCHAR(50)"
                       tableName="DLP_POSITIVE_ITEMS"/>
     </rollback>
   </changeSet>
