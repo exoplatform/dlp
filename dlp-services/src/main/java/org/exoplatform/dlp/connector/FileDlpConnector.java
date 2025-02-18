@@ -18,10 +18,27 @@ package org.exoplatform.dlp.connector;
 
 import java.net.URLDecoder;
 import java.text.Normalizer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+import javax.jcr.Item;
+import javax.jcr.ItemNotFoundException;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.Workspace;
+
 import org.apache.commons.lang3.StringUtils;
+
+import com.google.common.annotations.VisibleForTesting;
+
 import org.exoplatform.commons.search.index.IndexingService;
 import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.xml.InitParams;
@@ -31,14 +48,12 @@ import org.exoplatform.dlp.dto.RestoredDlpItem;
 import org.exoplatform.dlp.processor.DlpOperationProcessor;
 import org.exoplatform.dlp.service.DlpPositiveItemService;
 import org.exoplatform.dlp.service.RestoredDlpItemService;
+import org.exoplatform.documents.service.DocumentFileService;
 import org.exoplatform.ecms.legacy.search.data.SearchContext;
 import org.exoplatform.ecms.legacy.search.data.SearchResult;
-import org.exoplatform.services.cms.documents.TrashService;
-import org.exoplatform.services.cms.impl.Utils;
 import org.exoplatform.services.cms.link.LinkManager;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.ExtendedSession;
-import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.wcm.core.NodetypeConstant;
@@ -49,10 +64,6 @@ import org.exoplatform.social.core.identity.provider.OrganizationIdentityProvide
 import org.exoplatform.social.core.manager.IdentityManager;
 import org.exoplatform.web.controller.metadata.ControllerDescriptor;
 import org.exoplatform.web.controller.router.Router;
-
-import com.google.common.annotations.VisibleForTesting;
-
-import javax.jcr.*;
 
 /**
  * Dlp Connector for Files
@@ -85,7 +96,7 @@ public class FileDlpConnector extends DlpServiceConnector {
 
   private DlpOperationProcessor      dlpOperationProcessor;
 
-  private TrashService               trashService;
+  private DocumentFileService               documentFileService;
 
   private LinkManager                linkManager;
 
@@ -96,7 +107,7 @@ public class FileDlpConnector extends DlpServiceConnector {
                           DlpOperationProcessor dlpOperationProcessor,
                           RestoredDlpItemService restoredDlpItemService,
                           LinkManager linkManager,
-                          TrashService trashService) {
+                          DocumentFileService               documentFileService) {
     super(initParams);
     this.repositoryService = repositoryService;
     this.indexingService = indexingService;
@@ -104,7 +115,7 @@ public class FileDlpConnector extends DlpServiceConnector {
     this.restoredDlpItemService = restoredDlpItemService;
     this.dlpOperationProcessor = dlpOperationProcessor;
     this.linkManager = linkManager;
-    this.trashService = trashService;
+    this.documentFileService = documentFileService;
   }
 
   @Override
@@ -152,7 +163,7 @@ public class FileDlpConnector extends DlpServiceConnector {
       session = (ExtendedSession) WCMCoreUtils.getSystemSessionProvider()
                                               .getSession(COLLABORATION_WS, repositoryService.getCurrentRepository());
       Node node = session.getNodeByIdentifier(entityId);
-      boolean result = trashService.isInTrash(node);
+      boolean result = documentFileService.isInTrash(node.getPath());
       LOGGER.debug("Item {} isInTrash={}", entityId, result);
       return result;
     } catch (Exception e) {
@@ -289,9 +300,8 @@ public class FileDlpConnector extends DlpServiceConnector {
                                               .getSession(COLLABORATION_WS, repositoryService.getCurrentRepository());
       Node dlpQuarantineNode = (Node) session.getItem("/" + DLP_QUARANTINE_FOLDER);
       Node node = session.getNodeByIdentifier(itemReference);
-
       if (node != null && dlpQuarantineNode != null) {
-        Utils.removeDeadSymlinks(node, false);
+        documentFileService.removeDeadSymlinks(node.getPath(), false);
         node.remove();
         dlpQuarantineNode.save();
       }

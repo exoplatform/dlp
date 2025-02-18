@@ -29,7 +29,7 @@ import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.dlp.connector.FileDlpConnector;
 import org.exoplatform.dlp.processor.DlpOperationProcessor;
 import org.exoplatform.dlp.queue.QueueDlpService;
-import org.exoplatform.services.cms.documents.TrashService;
+import org.exoplatform.documents.service.DocumentFileService;
 import org.exoplatform.services.ext.action.InvocationContext;
 import org.exoplatform.services.jcr.impl.core.NodeImpl;
 import org.exoplatform.services.jcr.impl.core.PropertyImpl;
@@ -45,7 +45,7 @@ import org.exoplatform.services.wcm.core.NodetypeConstant;
 public class FileDLPAction implements AdvancedAction {
   private static final Log          LOGGER                 = ExoLogger.getExoLogger(FileDLPAction.class);
 
-  private TrashService              trashService;
+  private DocumentFileService       documentFileService;
 
   private QueueDlpService           queueDlpService;
 
@@ -61,7 +61,7 @@ public class FileDLPAction implements AdvancedAction {
                                                                                                      FileDlpConnector.RESTORE_PATH));
 
   public FileDLPAction() {
-    this.trashService = CommonsUtils.getService(TrashService.class);
+    this.documentFileService = CommonsUtils.getService(DocumentFileService.class);
     this.queueDlpService = CommonsUtils.getService(QueueDlpService.class);
     this.featureService = CommonsUtils.getService(ExoFeatureService.class);
     this.dlpOperationProcessor = CommonsUtils.getService(DlpOperationProcessor.class);
@@ -78,7 +78,7 @@ public class FileDLPAction implements AdvancedAction {
     switch (eventType) {
     case Event.NODE_ADDED:
       node = (NodeImpl) context.get(InvocationContext.CURRENT_ITEM);
-      if (node != null && !trashService.isInTrash(node)) {
+      if (node != null && !documentFileService.isInTrash(node.getPath())) {
         if (node.isNodeType(NodetypeConstant.NT_RESOURCE)) {
           node = node.getParent();
         }
@@ -91,7 +91,7 @@ public class FileDLPAction implements AdvancedAction {
       PropertyImpl property = (PropertyImpl) context.get(InvocationContext.CURRENT_ITEM);
       if (property != null && !excludedPropertyNames.contains(property.getName())) {
         node = property.getParent();
-        if (node != null && !trashService.isInTrash(node)) {
+        if (node != null && !documentFileService.isInTrash(node.getPath())) {
           if (node.isNodeType(NodetypeConstant.NT_RESOURCE)) {
             node = node.getParent();
           }

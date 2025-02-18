@@ -9,6 +9,7 @@ import org.exoplatform.dlp.dto.RestoredDlpItem;
 import org.exoplatform.dlp.processor.DlpOperationProcessor;
 import org.exoplatform.dlp.service.DlpPositiveItemService;
 import org.exoplatform.dlp.service.RestoredDlpItemService;
+import org.exoplatform.documents.service.DocumentFileService;
 import org.exoplatform.ecms.legacy.search.data.SearchResult;
 import org.exoplatform.services.cms.documents.TrashService;
 import org.exoplatform.services.cms.impl.Utils;
@@ -49,27 +50,27 @@ public class FileDlpConnectorTest {
   private static final MockedStatic<Utils>               UTILS                 = mockStatic(Utils.class);
 
   @Mock
-  private RepositoryService          repositoryService;
+  private RepositoryService                              repositoryService;
 
   @Mock
-  private IndexingService            indexingService;
+  private IndexingService                                indexingService;
 
   @Mock
-  private FileSearchServiceConnector fileSearchServiceConnector;
+  private FileSearchServiceConnector                     fileSearchServiceConnector;
 
   @Mock
-  private RestoredDlpItemService     restoredDlpItemService;
+  private RestoredDlpItemService                         restoredDlpItemService;
 
   @Mock
-  private DlpOperationProcessor      dlpOperationProcessor;
+  private DlpOperationProcessor                          dlpOperationProcessor;
 
   @Mock
-  private TrashService               trashService;
+  private DocumentFileService                            documentFileService;
 
   @Mock
-  private LinkManager                linkManager;
+  private LinkManager                                    linkManager;
 
-  private FileDlpConnector           fileDlpConnector;
+  private FileDlpConnector                               fileDlpConnector;
 
   @AfterClass
   public static void afterRunBare() throws Exception { // NOSONAR
@@ -95,7 +96,7 @@ public class FileDlpConnectorTest {
                                             dlpOperationProcessor,
                                             restoredDlpItemService,
                                             linkManager,
-                                            trashService);
+                                            documentFileService);
   }
 
   @Test
@@ -110,10 +111,10 @@ public class FileDlpConnectorTest {
     Node item = mock(Node.class);
     when(session.getNodeByIdentifier("1")).thenReturn(item);
     when(fileSearchServiceConnector.isIndexed(any(), anyString())).thenReturn(true);
-    when(trashService.isInTrash(any())).thenReturn(true);
+    when(documentFileService.isInTrash(any())).thenReturn(true);
     assertTrue(fileDlpConnector.processItem("1"));
 
-    when(trashService.isInTrash(any())).thenReturn(false);
+    when(documentFileService.isInTrash(any())).thenReturn(false);
     when(dlpOperationProcessor.getKeywords()).thenReturn("test");
     SearchResult searchResult = new SearchResult("url", "title", "test", "detail", "imageUri", 1321332, 1L);
     searchResult.setExcerpts(Map.of("title", List.of("test")));
@@ -197,7 +198,8 @@ public class FileDlpConnectorTest {
     Node link = mock(Node.class);
     when(linkManager.getAllLinks(item, NodetypeConstant.EXO_SYMLINK, sessionProvider)).thenReturn(List.of(link));
     when(item.getPath()).thenReturn("/path");
-    COMMONS_UTILS.when(() -> CommonsUtils.getService(DlpPositiveItemService.class)).thenReturn(mock(DlpPositiveItemService.class));
+    COMMONS_UTILS.when(() -> CommonsUtils.getService(DlpPositiveItemService.class))
+                 .thenReturn(mock(DlpPositiveItemService.class));
     Property titleProperty = mock(Property.class);
     Property lastModifierProperty = mock(Property.class);
 
