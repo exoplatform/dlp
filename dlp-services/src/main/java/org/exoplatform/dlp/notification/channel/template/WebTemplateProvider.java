@@ -16,12 +16,12 @@ import org.exoplatform.commons.api.notification.model.NotificationInfo;
 import org.exoplatform.commons.api.notification.model.PluginKey;
 import org.exoplatform.commons.api.notification.service.template.TemplateContext;
 import org.exoplatform.commons.notification.template.TemplateUtils;
+import org.exoplatform.commons.utils.TimeConvertUtils;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.dlp.notification.plugin.DlpAdminDetectedItemPlugin;
 import org.exoplatform.dlp.notification.plugin.DlpUserDetectedItemPlugin;
 import org.exoplatform.dlp.notification.plugin.DlpUserRestoredItemPlugin;
 import org.exoplatform.dlp.utils.DlpUtils;
-import org.exoplatform.webui.utils.TimeConvertUtils;
 
 @TemplateConfigs (
    templates = {
