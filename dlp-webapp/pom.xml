@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.exoplatform.addons.dlp</groupId>
     <artifactId>dlp-parent</artifactId>
-    <version>7.1.x-SNAPSHOT</version>
+    <version>7.1.0-20250820</version>
   </parent>
   <artifactId>dlp-webapp</artifactId>
   <packaging>war</packaging>
