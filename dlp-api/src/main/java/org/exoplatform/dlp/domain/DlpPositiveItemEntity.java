@@ -1,24 +1,23 @@
 package org.exoplatform.dlp.domain;
 
-import org.exoplatform.commons.api.persistence.ExoEntity;
-
-import jakarta.persistence.*;
 import java.util.Calendar;
 
-/**
- * Entity for Dlp positive item.
- */
+import io.meeds.common.persistence.PortableSequence;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Table;
+
 @Entity(name = "DlpPositiveItemEntity")
-@ExoEntity
 @Table(name = "DLP_POSITIVE_ITEMS")
 @NamedQuery(name = "DlpPositiveItemEntity.findDlpPositiveItemByReference", query = "SELECT q FROM DlpPositiveItemEntity q WHERE q.reference = :itemReference")
 @NamedQuery(name = "DlpPositiveItemEntity.getDlpPositiveItems", query = "SELECT q FROM DlpPositiveItemEntity q")
-
 public class DlpPositiveItemEntity {
 
   @Id
-  @SequenceGenerator(name = "SEQ_DLP_POSITIVE_ITEMS_ID", sequenceName = "SEQ_DLP_POSITIVE_ITEMS_ID", allocationSize = 1)
-  @GeneratedValue(strategy = GenerationType.AUTO, generator = "SEQ_DLP_POSITIVE_ITEMS_ID")
+  @PortableSequence(name = "SEQ_DLP_POSITIVE_ITEMS_ID")
   @Column(name = "ITEM_ID")
   private Long     id;
 

@@ -4,33 +4,25 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
+import io.meeds.common.persistence.PortableSequence;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
-import org.exoplatform.commons.api.persistence.ExoEntity;
-
-/**
- * Entity for Dlp operation.
- */
 @Entity
-@ExoEntity
 @Table(name = "DLP_QUEUE")
 @NamedQuery(name = "DlpOperation.findByEntityIdAndType", query = "SELECT q FROM DlpOperation q WHERE q.entityId = :entityId and q.entityType = :entityType")
 @NamedQuery(name = "DlpOperation.findAllFirstWithOffset", query = "SELECT q FROM DlpOperation q ORDER BY q.id")
 @NamedQuery(name = "DlpOperation.deleteByEntityId", query = "DELETE FROM DlpOperation q WHERE q.entityId = :entityId")
 public class DlpOperation implements Serializable {
 
+  private static final long serialVersionUID = 1280876028738269833L;
+
   @Id
-  @SequenceGenerator(name = "SEQ_DLP_QUEUE_ID", sequenceName = "SEQ_DLP_QUEUE_ID", allocationSize = 1)
-  @GeneratedValue(strategy = GenerationType.AUTO, generator = "SEQ_DLP_QUEUE_ID")
+  @PortableSequence(name = "SEQ_DLP_QUEUE_ID")
   @Column(name = "OPERATION_ID")
   private Long   id;
 
@@ -40,9 +32,6 @@ public class DlpOperation implements Serializable {
   @Column(name = "ENTITY_ID")
   private String entityId;
 
-  // The timestamp is managed by the DB and cannot be set or get
-  // It's only use for querying timestamp based dlp operations
-  @Temporal(TemporalType.TIMESTAMP)
   @Column(name = "OPERATION_TIMESTAMP", insertable = false, updatable = false)
   private Date   timestamp;
 
