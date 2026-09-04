@@ -1,0 +1,3 @@
+org.exoplatform.dlp.domain.DlpPositiveItemEntity
+org.exoplatform.dlp.domain.RestoredDlpItemEntity
+org.exoplatform.dlp.domain.DlpOperation
