@@ -1,7 +1,5 @@
 package org.exoplatform.dlp.notification.channel.template;
 
-import java.io.Writer;
-
 import org.exoplatform.commons.api.notification.NotificationContext;
 import org.exoplatform.commons.api.notification.annotation.TemplateConfig;
 import org.exoplatform.commons.api.notification.annotation.TemplateConfigs;
@@ -49,11 +47,6 @@ public class MailTemplateProvider extends TemplateProvider {
 
       return messageInfo.subject(subject).body(body).end();
     }
-
-    @Override
-    protected boolean makeDigest(NotificationContext ctx, Writer writer) {
-      return false;
-    }
   };
 
   /** Defines the template builder for DlpUserDetectedItemPlugin*/
@@ -77,11 +70,6 @@ public class MailTemplateProvider extends TemplateProvider {
 
       return messageInfo.subject(subject).body(body).end();
     }
-
-    @Override
-    protected boolean makeDigest(NotificationContext ctx, Writer writer) {
-      return false;
-    }
   };
 
   /** Defines the template builder for DlpUserRestoredItemPlugin*/
@@ -104,11 +92,6 @@ public class MailTemplateProvider extends TemplateProvider {
       ctx.setException(templateContext.getException());
 
       return messageInfo.subject(subject).body(body).end();
-    }
-
-    @Override
-    protected boolean makeDigest(NotificationContext ctx, Writer writer) {
-      return false;
     }
   };
 
