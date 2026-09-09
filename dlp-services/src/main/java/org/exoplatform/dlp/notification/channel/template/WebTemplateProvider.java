@@ -1,6 +1,5 @@
 package org.exoplatform.dlp.notification.channel.template;
 
-import java.io.Writer;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -72,11 +71,6 @@ public class WebTemplateProvider extends TemplateProvider {
       MessageInfo messageInfo = new MessageInfo();
       return messageInfo.body(body).end();
     }
-
-    @Override
-    protected boolean makeDigest(NotificationContext ctx, Writer writer) {
-      return false;
-    }
   };
 
 
@@ -108,11 +102,6 @@ public class WebTemplateProvider extends TemplateProvider {
       MessageInfo messageInfo = new MessageInfo();
       return messageInfo.body(body).end();
     }
-
-    @Override
-    protected boolean makeDigest(NotificationContext ctx, Writer writer) {
-      return false;
-    }
   };
 
   /**
@@ -142,11 +131,6 @@ public class WebTemplateProvider extends TemplateProvider {
       ctx.setException(templateContext.getException());
       MessageInfo messageInfo = new MessageInfo();
       return messageInfo.body(body).end();
-    }
-
-    @Override
-    protected boolean makeDigest(NotificationContext ctx, Writer writer) {
-      return false;
     }
   };
   
